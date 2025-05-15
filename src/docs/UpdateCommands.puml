@@ -1,0 +1,46 @@
+@startuml
+hide methods
+
+class UpdateTourCommand {
+    name: String
+    description: String
+    from: UpdateAddressCommand
+    to: UpdateAddressCommand
+    transportType: TransportType
+}
+
+class UpdateAddressCommand {
+    country: String
+    city: String
+    zipCode: Integer
+    streetName: String
+    streetNumber: String
+}
+
+enum TransportType {
+    BIKE
+    HIKE
+    RUNNING
+    VACATION
+}
+
+class UpdateTourLogCommand {
+    tourId: UUID
+    duration: UpdateDurationCommand
+    comment: String
+    difficulty: int
+    distance: double
+    rating: int
+}
+
+class UpdateDurationCommand {
+    startTime: LocalDateTime
+    endTime: LocalDateTime
+}
+
+UpdateTourCommand -- UpdateAddressCommand
+UpdateTourCommand -- TransportType
+
+UpdateTourLogCommand -- UpdateDurationCommand
+
+@enduml

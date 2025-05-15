@@ -1,0 +1,46 @@
+@startuml
+hide methods
+
+class CreateTourCommand {
+    name: String
+    description: String
+    from: CreateAddressCommand
+    to: CreateAddressCommand
+    transportType: TransportType
+}
+
+class CreateAddressCommand {
+    country: String
+    city: String
+    zipCode: Integer
+    streetName: String
+    streetNumber: String
+}
+
+enum TransportType {
+    BIKE
+    HIKE
+    RUNNING
+    VACATION
+}
+
+class CreateTourLogCommand {
+    tourId: UUID
+    duration: CreateDurationCommand
+    comment: String
+    difficulty: int
+    distance: double
+    rating: int
+}
+
+class CreateDurationCommand {
+    startTime: LocalDateTime
+    endTime: LocalDateTime
+}
+
+CreateTourCommand -- CreateAddressCommand
+CreateTourCommand -- TransportType
+
+CreateTourLogCommand -- CreateDurationCommand
+
+@enduml

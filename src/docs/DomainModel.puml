@@ -1,0 +1,81 @@
+@startuml
+hide methods
+
+class Tour <<Entity>> {
+    id: TourId
+    name: String
+    description: String
+    from: Address
+    to: Address
+    transportType: TransportType
+    distance: double
+    estimatedTime: double
+    routeInformationImageUrl: String
+    popularity: int
+    childFriendliness: ChildFriendliness
+}
+
+class TourId <<ValueObject>> {
+    id: UUID
+}
+
+class Address <<ValueObject>> {
+    country: String
+    city: String
+    zipCode: Integer
+    streetName: String
+    streetNumber: String
+}
+
+enum TransportType {
+    BIKE
+    HIKE
+    RUNNING
+    VACATION
+}
+
+class ChildFriendliness <<ValueObject>> {
+    rating: int
+}
+
+class TourLog <<Entity>> {
+    id: TourLogId
+    tourId: tourId
+    duration: Duration
+    comment: String
+    difficulty: Difficulty
+    distance: double
+    rating: Rating
+}
+
+class TourLogId <<ValueObject>> {
+    id: UUID
+}
+
+class Duration <<ValueObject>> {
+    startTime: LocalDateTime
+    endTime: LocalDateTime
+    duration: double
+}
+
+class Difficulty <<ValueObject>> {
+    difficulty: int
+}
+
+class Rating <<ValueObject>> {
+    rating: int
+}
+
+Tour -- TourId
+Tour -- Address
+Tour -- TransportType
+Tour -- ChildFriendliness
+
+TourLog -- TourLogId
+TourLog -- TourId
+TourLog -- Duration
+TourLog -- Difficulty
+TourLog -- Rating
+
+
+@enduml

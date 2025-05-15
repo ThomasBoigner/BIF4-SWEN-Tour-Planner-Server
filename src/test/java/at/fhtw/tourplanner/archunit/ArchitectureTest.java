@@ -5,52 +5,26 @@ import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
-import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
+import static com.tngtech.archunit.library.Architectures.onionArchitecture;
 
 @AnalyzeClasses(packages = "at.fhtw.tourplanner", importOptions = {ImportOption.DoNotIncludeTests.class, ImportOption.DoNotIncludeJars.class})
 public class ArchitectureTest {
-    private static final String PRESENTATION = "Presentation";
-    private static final String SERVICE = "Service";
-    private static final String PERSISTENCE = "Persistence";
-    private static final String DOMAIN = "Domain";
-    private static final String FOUNDATION = "Foundation";
-    private static final String CONFIGURATION = "Configuration";
-    private static final String VALIDATION = "Validation";
 
-    private static final String PKG_PRESENTATION = "..presentation..";
-    private static final String PKG_SERVICE = "..service..";
-    private static final String PKG_PERSISTENCE = "..persistence..";
-    private static final String PKG_DOMAIN = "..domain..";
-    private static final String PKG_FOUNDATION = "..foundation..";
-    private static final String PKG_CONFIGURATION = "..config..";
-    private static final String PKG_VALIDATION = "..validation..";
+    private static final String PKG_DOMAIN_MODEL = "..domain.model..";
+    private static final String PKG_DOMAIN_SERVICES = "..domain.service..";
+    private static final String PKG_APPLICATION_SERVICES = "..application..";
+    private static final String PKG_ADAPTER_PERSISTENCE = "..infrastructure.persistence..";
+    private static final String PKG_ADAPTER_CONFIGURATION = "..infrastructure.configuration..";
+    private static final String PKG_ADAPTER_REST = "..infrastructure.rest..";
 
     @ArchTest
-    static final ArchRule layeredArchitecture = layeredArchitecture()
-            .consideringAllDependencies()
-            .layer(PRESENTATION).definedBy(PKG_PRESENTATION)
-            .layer(SERVICE).definedBy(PKG_SERVICE)
-            .layer(PERSISTENCE).definedBy(PKG_PERSISTENCE)
-            .layer(DOMAIN).definedBy(PKG_DOMAIN)
-            .layer(FOUNDATION).definedBy(PKG_FOUNDATION)
-            .layer(CONFIGURATION).definedBy(PKG_CONFIGURATION)
-            .layer(VALIDATION).definedBy(PKG_VALIDATION)
-            .whereLayer(PRESENTATION).mayOnlyBeAccessedByLayers(VALIDATION)
-            .whereLayer(SERVICE).mayOnlyBeAccessedByLayers(PRESENTATION, SERVICE, VALIDATION, CONFIGURATION)
-            .whereLayer(PERSISTENCE).mayOnlyBeAccessedByLayers(SERVICE)
-            .whereLayer(DOMAIN).mayOnlyBeAccessedByLayers(SERVICE, PERSISTENCE, VALIDATION)
-            .whereLayer(FOUNDATION).mayOnlyBeAccessedByLayers(PERSISTENCE, SERVICE, PRESENTATION, FOUNDATION)
-            .whereLayer(CONFIGURATION).mayNotBeAccessedByAnyLayer()
+    static final ArchRule layeredArchitecture = onionArchitecture()
+            .domainModels(PKG_DOMAIN_MODEL)
+            .domainServices(PKG_DOMAIN_SERVICES)
+            .applicationServices(PKG_APPLICATION_SERVICES)
+            .adapter("persistence", PKG_ADAPTER_PERSISTENCE)
+            .adapter("configuration", PKG_ADAPTER_CONFIGURATION)
+            .adapter("rest", PKG_ADAPTER_REST)
             .allowEmptyShould(true);
 
-    @ArchTest
-    static final ArchRule serviceClassesMustResideInLayerService = classes().that().haveSimpleNameEndingWith("Service")
-            .should().resideInAnyPackage(PKG_SERVICE)
-            .allowEmptyShould(true);
-
-    @ArchTest
-    static final ArchRule restControllerClassesMustResideInLayerPresentation = classes().that().haveSimpleNameEndingWith("RestController")
-            .should().resideInAnyPackage(PKG_PRESENTATION)
-            .allowEmptyShould(true);
 }
