@@ -22,7 +22,7 @@ class TourId <<ValueObject>> {
 class Address <<ValueObject>> {
     country: String
     city: String
-    zipCode: Integer
+    zipCode: int
     streetName: String
     streetNumber: String
 }
