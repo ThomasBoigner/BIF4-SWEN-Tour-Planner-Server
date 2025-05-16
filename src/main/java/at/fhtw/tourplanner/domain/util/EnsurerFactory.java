@@ -2,12 +2,12 @@ package at.fhtw.tourplanner.domain.util;
 
 public class EnsurerFactory {
 
-    public static ObjectEnsurer when(Object value) {
-        return new ObjectEnsurer(value, "value");
+    public static DoubleEnsurer when(Double value) {
+        return new DoubleEnsurer(value, "value");
     }
 
-    public static ObjectEnsurer when(Object value, String name) {
-        return new ObjectEnsurer(value, name);
+    public static DoubleEnsurer when(Double value, String name) {
+        return new DoubleEnsurer(value, name);
     }
 
     public static StringEnsurer when(String value){

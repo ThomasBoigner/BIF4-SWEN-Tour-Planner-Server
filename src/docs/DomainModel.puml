@@ -10,7 +10,7 @@ class Tour <<Entity>> {
     transportType: TransportType
     distance: double
     estimatedTime: double
-    routeInformationImageUrl: String
+    imageUrl: String
     popularity: int
     childFriendliness: ChildFriendliness
 }

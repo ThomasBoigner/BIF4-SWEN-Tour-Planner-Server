@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record TourId(UUID id) {
     public TourId {
-        Objects.requireNonNull(id, "Id must not be null");
+        Objects.requireNonNull(id, "tour id must not be null");
     }
 
     public TourId() {

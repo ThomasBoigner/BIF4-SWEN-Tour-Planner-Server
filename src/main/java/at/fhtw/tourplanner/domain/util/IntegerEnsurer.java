@@ -3,6 +3,12 @@ package at.fhtw.tourplanner.domain.util;
 public record IntegerEnsurer(Integer value, String name)
         implements Ensurer<IntegerEnsurer, Integer>{
 
+    public IntegerEnsurer isNotNull() {
+        if (value == null)
+            throw new IllegalArgumentException(String.format("%s must not be null!", name));
+        return this;
+    }
+
     public IntegerEnsurer isPositive(){
         if (value < 0)
             throw new IllegalArgumentException(

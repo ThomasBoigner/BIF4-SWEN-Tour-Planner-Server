@@ -9,6 +9,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IntegerEnsurerTest {
     @Test
+    void verifyIntegerEnsurer_isNotNull_goodCases(){
+        // Given
+        Integer value = 1;
+        String name = "B";
+
+        // Then
+        assertThat(when(value, name).isNotNull().thenAssign()).isSameAs(value);
+    }
+
+    @Test
     void verifyIntegerEnsurer_isPositive_goodCases(){
         // Given
         int value = 1;
@@ -25,6 +35,18 @@ public class IntegerEnsurerTest {
 
         // Then
         assertThat(when(value).isNegative().thenAssign()).isSameAs(value);
+    }
+
+    @Test
+    void verifyLongEnsurer_isNotNull_exceptionGetsThrown(){
+        // Given
+        Integer value = null;
+
+        // When
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isNotNull());
+
+        // Then
+        assertEquals("value must not be null!", exception.getMessage());
     }
 
     @Test
