@@ -10,7 +10,7 @@ class Tour <<Entity>> {
     transportType: TransportType
     distance: double
     estimatedTime: double
-    routeInformationImageUrl: String
+    imageUrl: String
     popularity: int
     childFriendliness: ChildFriendliness
 }
@@ -22,7 +22,7 @@ class TourId <<ValueObject>> {
 class Address <<ValueObject>> {
     country: String
     city: String
-    zipCode: Integer
+    zipCode: int
     streetName: String
     streetNumber: String
 }
