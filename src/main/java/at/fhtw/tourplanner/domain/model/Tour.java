@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
 import static at.fhtw.tourplanner.domain.util.EnsurerFactory.when;
 
+@Slf4j
 @Getter
 @ToString
 @AllArgsConstructor
@@ -36,6 +38,7 @@ public class Tour {
         Objects.requireNonNull(to, "to must not be null");
         Objects.requireNonNull(transportType, "transport type must not be null");
 
+        this.id = new TourId();
         this.name = when(name, "tour name")
                 .isNotNull().and()
                 .isNotEmpty().and()
@@ -53,6 +56,8 @@ public class Tour {
                 .isNotNull().and()
                 .isNotEmpty().and()
                 .isNotBlank().thenAssign();
+
+        log.debug("Created tour {}", this);
     }
 
     @Override
