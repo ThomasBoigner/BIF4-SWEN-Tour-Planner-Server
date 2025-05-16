@@ -1,6 +1,7 @@
 package at.fhtw.tourplanner.domain.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -22,6 +23,7 @@ public class Tour {
     private double estimatedTime;
     private String imageUrl;
 
+    @Builder
     public Tour(String name,
                 String description,
                 Address from,

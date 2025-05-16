@@ -1,7 +1,10 @@
 package at.fhtw.tourplanner.domain.model;
 
+import lombok.Builder;
+
 import static at.fhtw.tourplanner.domain.util.EnsurerFactory.when;
 
+@Builder
 public record Address(
         String country,
         String city,
