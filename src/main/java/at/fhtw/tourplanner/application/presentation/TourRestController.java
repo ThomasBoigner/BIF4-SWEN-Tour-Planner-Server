@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 
 @Slf4j
-@CrossOrigin("http://localhost:4200/")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value = TourRestController.BASE_URL)
 public class TourRestController {
