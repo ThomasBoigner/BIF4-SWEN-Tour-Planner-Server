@@ -12,8 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,5 +65,30 @@ public class TourApplicationServiceTest {
 
         // Then
         assertThat(tours).contains(new TourDto(tour));
+    }
+
+    @Test
+    void ensureGetTourWorksProperly(){
+        // Given
+        when(tourRepository.findTourById(eq(tour.getId()))).thenReturn(Optional.of(tour));
+
+        // When
+        Optional<TourDto> tourDto = tourService.getTour(tour.getId());
+
+        // Then
+        assertThat(tourDto.isPresent()).isTrue();
+        assertThat(tourDto.get()).isEqualTo(new TourDto(tour));
+    }
+
+    @Test
+    void ensureGetTourWorksProperlyWhenTourCanNotBeFound(){
+        // Given
+        when(tourRepository.findTourById(eq(tour.getId()))).thenReturn(Optional.empty());
+
+        // When
+        Optional<TourDto> tourDto = tourService.getTour(tour.getId());
+
+        // Then
+        assertThat(tourDto.isPresent()).isFalse();
     }
 }

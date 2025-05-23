@@ -12,7 +12,7 @@ public class ArchitectureTest {
 
     private static final String PKG_DOMAIN_MODEL = "..domain.model..";
     private static final String PKG_DOMAIN_SERVICES = "..domain.service..";
-    private static final String PKG_APPLICATION_SERVICES = "..application.service..";
+    private static final String PKG_APPLICATION_SERVICES = "..application..";
     private static final String PKG_ADAPTER_PERSISTENCE = "..infrastructure.persistence..";
     private static final String PKG_ADAPTER_CONFIGURATION = "..infrastructure.configuration..";
     private static final String PKG_ADAPTER_REST = "..infrastructure.rest..";

@@ -4,6 +4,7 @@ import at.fhtw.tourplanner.application.service.TourApplicationService;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
+import at.fhtw.tourplanner.domain.model.TourId;
 import at.fhtw.tourplanner.domain.model.TransportType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -18,7 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
+import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -33,7 +36,7 @@ public class TourRestControllerTest {
     @Mock
     private TourApplicationService tourService;
 
-    private TourDto tour;
+    private Tour tour;
 
     private ObjectMapper objectMapper;
 
@@ -43,7 +46,7 @@ public class TourRestControllerTest {
 
         objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-        tour = new TourDto(Tour.builder()
+        tour = Tour.builder()
                 .name("Tour 1")
                 .description("This tour is awesome")
                 .from(Address.builder()
@@ -66,20 +69,20 @@ public class TourRestControllerTest {
                 .distance(20)
                 .estimatedTime(120)
                 .imageUrl("img")
-                .build());
+                .build();
     }
 
     @Test
     void ensureGetToursWorksProperly() throws Exception {
         // Given
-        when(tourService.getTours()).thenReturn(List.of(tour));
+        when(tourService.getTours()).thenReturn(List.of(new TourDto(tour)));
 
         // Perform
         mockMvc.perform(get("/api/tour").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(tour))));
+                .andExpect(content().json(objectMapper.writeValueAsString(List.of(new TourDto(tour)))));
     }
 
     @Test
@@ -91,5 +94,29 @@ public class TourRestControllerTest {
         mockMvc.perform(get("/api/tour").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void ensureGetTourWorksProperly() throws Exception {
+        // When
+        when(tourService.getTour(eq(tour.getId()))).thenReturn(Optional.of(new TourDto(tour)));
+
+        // Perform
+        mockMvc.perform(get("/api/tour/%s".formatted(tour.getId().id())).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(objectMapper.writeValueAsString(new TourDto(tour))));
+    }
+
+    @Test
+    void ensureGetTourReturnsNotFoundWhenTourCanNotBeFound() throws Exception {
+        // When
+        when(tourService.getTour(eq(tour.getId()))).thenReturn(Optional.empty());
+
+        // Perform
+        mockMvc.perform(get("/api/tour/%s".formatted(tour.getId().id())).accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 }

@@ -2,16 +2,15 @@ package at.fhtw.tourplanner.application.presentation;
 
 import at.fhtw.tourplanner.application.service.TourApplicationService;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
+import at.fhtw.tourplanner.domain.model.TourId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 
@@ -24,6 +23,7 @@ public class TourRestController {
 
     public static final String BASE_URL = "/api/tour";
     public static final String PATH_INDEX = "/";
+    public static final String PATH_VAR_ID = "/{id}";
 
     @GetMapping({"", PATH_INDEX})
     public HttpEntity<List<TourDto>> getTours() {
@@ -32,5 +32,13 @@ public class TourRestController {
         return (tours.isEmpty())
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(tours);
+    }
+
+    @GetMapping(PATH_VAR_ID)
+    public HttpEntity<TourDto> getTour(@PathVariable UUID id) {
+        log.debug("Incoming Http GET tour with id {} request received", id);
+        return tourService.getTour(new TourId(id))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
