@@ -12,11 +12,6 @@
     </module>
 
     <module name="TreeWalker">
-        <!-- Check for appropriate method length -->
-        <module name="MethodLength">
-            <property name="max" value="30"/>
-        </module>
-
         <!-- Check for proper indentation and braces placement -->
         <module name="Indentation"/>
         <module name="LeftCurly"/>

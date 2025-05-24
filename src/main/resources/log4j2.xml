@@ -30,7 +30,7 @@
             <AppenderRef ref="RollingFile"/>
         </Root>
 
-        <Logger name="at.socia.sociaserver" level="trace"/>
+        <Logger name="at.fhtw.tourplanner" level="trace"/>
     </Loggers>
 
 </Configuration>

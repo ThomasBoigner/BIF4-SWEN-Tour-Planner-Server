@@ -96,6 +96,11 @@ public class JpaTourRepository implements TourRepository {
     }
 
     @Override
+    public boolean existsTourByName(String name) {
+        return tourEntityRepository.existsTourByName(name);
+    }
+
+    @Override
     public List<Tour> findAll() {
         return tourEntityRepository.findAll().stream().map(TourEntity::toTour).toList();
     }
@@ -103,6 +108,11 @@ public class JpaTourRepository implements TourRepository {
     @Override
     public Optional<Tour> findTourById(TourId id) {
         return tourEntityRepository.findTourEntityByTourId(id.id()).map(TourEntity::toTour);
+    }
+
+    @Override
+    public void deleteTourById(TourId id) {
+        tourEntityRepository.deleteTourEntityByTourId(id.id());
     }
 
     @PostConstruct

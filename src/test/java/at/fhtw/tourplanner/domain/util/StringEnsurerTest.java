@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class StringEnsurerTest {
 
     @Test
-    void verifyStringEnsurer_isNotNull_goodCases(){
+    void verifyStringEnsurerIsNotNullGoodCases(){
         // Given
         String value = "A";
         String name = "B";
@@ -20,7 +20,7 @@ public class StringEnsurerTest {
     }
 
     @Test
-    void verifyStringEnsurer_isNotEmpty_goodCases(){
+    void verifyStringEnsurerIsNotEmptyGoodCases(){
         // Given
         String value = "A";
 
@@ -29,7 +29,7 @@ public class StringEnsurerTest {
     }
 
     @Test
-    void verifyStringEnsurer_isNotBlank_goodCases(){
+    void verifyStringEnsurerIsNotBlankGoodCases(){
         // Given
         String value = "A";
 
@@ -38,7 +38,7 @@ public class StringEnsurerTest {
     }
 
     @Test
-    void verifyStringEnsurer_contains_goodCases(){
+    void verifyStringEnsurerContainsGoodCases(){
         // Given
         String value = "ABC";
         String partial = "A";
@@ -48,12 +48,13 @@ public class StringEnsurerTest {
     }
 
     @Test
-    void verifyStringEnsurer_isNotNull_exceptionGetsThrown(){
+    void verifyStringEnsurerIsNotNullExceptionGetsThrown(){
         // Given
         String value = null;
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isNotNull());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isNotNull());
 
         // Then
         assertEquals("value must not be null!", exception.getMessage());
@@ -62,50 +63,54 @@ public class StringEnsurerTest {
 
 
     @Test
-    void verifyStringEnsurer_isNotEmpty_exceptionGetsThrown(){
+    void verifyStringEnsurerIsNotEmptyExceptionGetsThrown(){
         // Given
         String value = "";
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isNotEmpty());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isNotEmpty());
 
         // Then
         assertEquals("value must not be empty!", exception.getMessage());
     }
 
     @Test
-    void verifyStringEnsurer_isNotBlank_exceptionGetsThrown(){
+    void verifyStringEnsurerIsNotBlankExceptionGetsThrown(){
         // Given
         String value = " ";
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isNotBlank());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isNotBlank());
 
         // Then
         assertEquals("value must not be blank!", exception.getMessage());
     }
 
     @Test
-    void verifyStringEnsurer_contains_exceptionGetsThrown() {
+    void verifyStringEnsurerContainsExceptionGetsThrown() {
         // Given
         String value = "ABC";
         String partial = "D";
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).contains(partial));
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).contains(partial));
 
         // Then
         assertEquals("value should contain 'D'", exception.getMessage());
     }
 
     @Test
-    void verifyStringEnsurer_contains_PartialNullExceptionGetsThrown() {
+    void verifyStringEnsurerContainsPartialNullExceptionGetsThrown() {
         // Given
         String value = "ABC";
         String partial = null;
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).contains(partial));
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).contains(partial));
 
         // Then
         assertEquals("Partial must not be null!", exception.getMessage());

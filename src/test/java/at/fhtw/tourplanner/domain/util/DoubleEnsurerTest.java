@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DoubleEnsurerTest {
     @Test
-    void verifyDoubleEnsurer_isNotNull_goodCases(){
+    void verifyDoubleEnsurerIsNotNullGoodCases(){
         // Given
         Double value = 1.0;
         String name = "B";
@@ -19,7 +19,7 @@ public class DoubleEnsurerTest {
     }
 
     @Test
-    void verifyDoubleEnsurer_isPositive_goodCases(){
+    void verifyDoubleEnsurerIsPositiveGoodCases(){
         // Given
         Double value = 1.0;
         String name = "A";
@@ -29,7 +29,7 @@ public class DoubleEnsurerTest {
     }
 
     @Test
-    void verifyDoubleEnsurer_isNegative_goodCases(){
+    void verifyDoubleEnsurerIsNegativeGoodCases(){
         // Given
         Double value = -1.0;
 
@@ -38,36 +38,39 @@ public class DoubleEnsurerTest {
     }
 
     @Test
-    void verifyDoubleEnsurer_isNotNull_exceptionGetsThrown(){
+    void verifyDoubleEnsurerIsNotNullExceptionGetsThrown(){
         // Given
         Double value = null;
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isNotNull());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isNotNull());
 
         // Then
         assertEquals("value must not be null!", exception.getMessage());
     }
 
     @Test
-    void verifyDoubleEnsurer_isPositive_exceptionGetsThrown(){
+    void verifyDoubleEnsurerIsPositiveExceptionGetsThrown(){
         // Given
         Double value = -1.0;
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isPositive());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isPositive());
 
         // Then
         assertEquals("value must be positive but was -1.000000", exception.getMessage());
     }
 
     @Test
-    void verifyDoubleEnsurer_isNegative_exceptionGetsThrown(){
+    void verifyDoubleEnsurerIsNegativeExceptionGetsThrown(){
         // Given
         Double value = 1.0;
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isNegative());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isNegative());
 
         // Then
         assertEquals("value must be negative but was 1.000000", exception.getMessage());

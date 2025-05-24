@@ -1,10 +1,11 @@
 package at.fhtw.tourplanner.application.presentation;
 
 import at.fhtw.tourplanner.application.service.TourApplicationService;
+import at.fhtw.tourplanner.application.service.commands.CreateAddressCommand;
+import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
-import at.fhtw.tourplanner.domain.model.TourId;
 import at.fhtw.tourplanner.domain.model.TransportType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -23,10 +24,9 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
@@ -37,6 +37,7 @@ public class TourRestControllerTest {
     private TourApplicationService tourService;
 
     private Tour tour;
+    private TourDto tourDto;
 
     private ObjectMapper objectMapper;
 
@@ -50,7 +51,6 @@ public class TourRestControllerTest {
                 .name("Tour 1")
                 .description("This tour is awesome")
                 .from(Address.builder()
-                        .streetName("Austria")
                         .city("Deutsch Wagram")
                         .zipCode(2232)
                         .streetName("Radetzkystraße")
@@ -58,7 +58,6 @@ public class TourRestControllerTest {
                         .country("Austria")
                         .build())
                 .to(Address.builder()
-                        .streetName("Austria")
                         .city("Strasshof an der Nordbahn")
                         .zipCode(2231)
                         .streetName("Billroth-Gasse")
@@ -70,19 +69,21 @@ public class TourRestControllerTest {
                 .estimatedTime(120)
                 .imageUrl("img")
                 .build();
+
+        tourDto = new TourDto(tour);
     }
 
     @Test
     void ensureGetToursWorksProperly() throws Exception {
         // Given
-        when(tourService.getTours()).thenReturn(List.of(new TourDto(tour)));
+        when(tourService.getTours()).thenReturn(List.of(tourDto));
 
         // Perform
         mockMvc.perform(get("/api/tour").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(new TourDto(tour)))));
+                .andExpect(content().json(objectMapper.writeValueAsString(List.of(tourDto))));
     }
 
     @Test
@@ -99,14 +100,15 @@ public class TourRestControllerTest {
     @Test
     void ensureGetTourWorksProperly() throws Exception {
         // When
-        when(tourService.getTour(eq(tour.getId()))).thenReturn(Optional.of(new TourDto(tour)));
+        when(tourService.getTour(eq(tour.getId()))).thenReturn(Optional.of(tourDto));
 
         // Perform
-        mockMvc.perform(get("/api/tour/%s".formatted(tour.getId().id())).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/tour/%s".formatted(tour.getId().id()))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(objectMapper.writeValueAsString(new TourDto(tour))));
+                .andExpect(content().string(objectMapper.writeValueAsString(tourDto)));
     }
 
     @Test
@@ -115,8 +117,53 @@ public class TourRestControllerTest {
         when(tourService.getTour(eq(tour.getId()))).thenReturn(Optional.empty());
 
         // Perform
-        mockMvc.perform(get("/api/tour/%s".formatted(tour.getId().id())).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/tour/%s".formatted(tour.getId().id()))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void ensureCreateTourWorksProperly() throws Exception {
+        // Given
+        CreateTourCommand command = CreateTourCommand.builder()
+                .name("Tour 1")
+                .description("This tour is awesome")
+                .from(CreateAddressCommand.builder()
+                        .city("Deutsch Wagram")
+                        .zipCode(2232)
+                        .streetName("Radetzkystraße")
+                        .streetNumber("2-6")
+                        .country("Austria")
+                        .build())
+                .to(CreateAddressCommand.builder()
+                        .city("Strasshof an der Nordbahn")
+                        .zipCode(2231)
+                        .streetName("Billroth-Gasse")
+                        .streetNumber("5")
+                        .country("Austria")
+                        .build())
+                .transportType(TransportType.BIKE)
+                .build();
+        when(tourService.createTour(eq(command))).thenReturn(tourDto);
+
+        // Perform
+        mockMvc.perform(post("/api/tour").accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(command)))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(redirectedUrl("/api/tour/" + tourDto.id()))
+                .andExpect(content().string(objectMapper.writeValueAsString(tourDto)));
+    }
+
+    @Test
+    void ensureDeleteTourWorksProperly() throws Exception {
+        // Perform
+        mockMvc.perform(delete("/api/tour/%s".formatted(tour.getId().id()))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }

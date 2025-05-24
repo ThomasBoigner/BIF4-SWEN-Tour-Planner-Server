@@ -7,7 +7,12 @@ import com.tngtech.archunit.lang.ArchRule;
 
 import static com.tngtech.archunit.library.Architectures.onionArchitecture;
 
-@AnalyzeClasses(packages = "at.fhtw.tourplanner", importOptions = {ImportOption.DoNotIncludeTests.class, ImportOption.DoNotIncludeJars.class})
+@AnalyzeClasses(
+        packages = "at.fhtw.tourplanner",
+        importOptions = {
+            ImportOption.DoNotIncludeTests.class,
+            ImportOption.DoNotIncludeJars.class
+        })
 public class ArchitectureTest {
 
     private static final String PKG_DOMAIN_MODEL = "..domain.model..";
@@ -18,7 +23,7 @@ public class ArchitectureTest {
     private static final String PKG_ADAPTER_REST = "..infrastructure.rest..";
 
     @ArchTest
-    static final ArchRule layeredArchitecture = onionArchitecture()
+    static final ArchRule LAYERED_ARCHITECTURE = onionArchitecture()
             .domainModels(PKG_DOMAIN_MODEL)
             .domainServices(PKG_DOMAIN_SERVICES)
             .applicationServices(PKG_APPLICATION_SERVICES)

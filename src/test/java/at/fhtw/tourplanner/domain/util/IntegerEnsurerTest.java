@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IntegerEnsurerTest {
     @Test
-    void verifyIntegerEnsurer_isNotNull_goodCases(){
+    void verifyIntegerEnsurerIsNotNullGoodCases(){
         // Given
         Integer value = 1;
         String name = "B";
@@ -19,7 +19,7 @@ public class IntegerEnsurerTest {
     }
 
     @Test
-    void verifyIntegerEnsurer_isPositive_goodCases(){
+    void verifyIntegerEnsurerIsPositiveGoodCases(){
         // Given
         int value = 1;
         String name = "A";
@@ -29,7 +29,7 @@ public class IntegerEnsurerTest {
     }
 
     @Test
-    void verifyIntegerEnsurer_isNegative_goodCases(){
+    void verifyIntegerEnsurerIsNegativeGoodCases(){
         // Given
         int value = -1;
 
@@ -38,36 +38,39 @@ public class IntegerEnsurerTest {
     }
 
     @Test
-    void verifyLongEnsurer_isNotNull_exceptionGetsThrown(){
+    void verifyLongEnsurerIsNotNullExceptionGetsThrown(){
         // Given
         Integer value = null;
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isNotNull());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isNotNull());
 
         // Then
         assertEquals("value must not be null!", exception.getMessage());
     }
 
     @Test
-    void verifyIntegerEnsurer_isPositive_exceptionGetsThrown(){
+    void verifyIntegerEnsurerIsPositiveExceptionGetsThrown(){
         // Given
         int value = -1;
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isPositive());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isPositive());
 
         // Then
         assertEquals("value must be positive but was -1", exception.getMessage());
     }
 
     @Test
-    void verifyIntegerEnsurer_isNegative_exceptionGetsThrown(){
+    void verifyIntegerEnsurerIsNegativeExceptionGetsThrown(){
         // Given
         int value = 1;
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isNegative());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isNegative());
 
         // Then
         assertEquals("value must be negative but was 1", exception.getMessage());

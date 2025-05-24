@@ -1,5 +1,7 @@
 package at.fhtw.tourplanner.application.service;
 
+import at.fhtw.tourplanner.application.service.commands.CreateAddressCommand;
+import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -90,5 +93,86 @@ public class TourApplicationServiceTest {
 
         // Then
         assertThat(tourDto.isPresent()).isFalse();
+    }
+
+    @Test
+    void ensureCreateTourWorksProperly(){
+        // Given
+        CreateTourCommand command = CreateTourCommand.builder()
+                .name("Tour 1")
+                .description("This tour is awesome")
+                .from(CreateAddressCommand.builder()
+                        .city("Deutsch Wagram")
+                        .zipCode(2232)
+                        .streetName("Radetzkystraße")
+                        .streetNumber("2-6")
+                        .country("Austria")
+                        .build())
+                .to(CreateAddressCommand.builder()
+                        .city("Strasshof an der Nordbahn")
+                        .zipCode(2231)
+                        .streetName("Billroth-Gasse")
+                        .streetNumber("5")
+                        .country("Austria")
+                        .build())
+                .transportType(TransportType.BIKE)
+                .build();
+        when(tourRepository.existsTourByName(eq(command.name()))).thenReturn(false);
+
+        // When
+        TourDto tourDto = tourService.createTour(command);
+
+        // Then
+        assertThat(tourDto).isNotNull();
+        assertThat(tourDto.id()).isNotNull();
+        assertThat(tourDto.name()).isEqualTo(command.name());
+        assertThat(tourDto.description()).isEqualTo(command.description());
+        assertThat(tourDto.from().streetName()).isEqualTo(command.from().streetName());
+        assertThat(tourDto.from().streetNumber()).isEqualTo(command.from().streetNumber());
+        assertThat(tourDto.from().city()).isEqualTo(command.from().city());
+        assertThat(tourDto.from().zipCode()).isEqualTo(command.from().zipCode());
+        assertThat(tourDto.from().country()).isEqualTo(command.from().country());
+        assertThat(tourDto.to().streetName()).isEqualTo(command.to().streetName());
+        assertThat(tourDto.to().streetNumber()).isEqualTo(command.to().streetNumber());
+        assertThat(tourDto.to().city()).isEqualTo(command.to().city());
+        assertThat(tourDto.to().zipCode()).isEqualTo(command.to().zipCode());
+        assertThat(tourDto.to().country()).isEqualTo(command.to().country());
+        assertThat(tourDto.transportType()).isEqualTo(command.transportType());
+        assertThat(tourDto.distance()).isEqualTo(0);
+        assertThat(tourDto.estimatedTime()).isEqualTo(0);
+        assertThat(tourDto.imageUrl()).isEqualTo("/img");
+    }
+
+    @Test
+    void ensureCreateTourThrowsExceptionWhenTourWithNameAlreadyExists() {
+        // Given
+        CreateTourCommand command = CreateTourCommand.builder()
+                .name("Tour 1")
+                .description("This tour is awesome")
+                .from(CreateAddressCommand.builder()
+                        .city("Deutsch Wagram")
+                        .zipCode(2232)
+                        .streetName("Radetzkystraße")
+                        .streetNumber("2-6")
+                        .country("Austria")
+                        .build())
+                .to(CreateAddressCommand.builder()
+                        .city("Strasshof an der Nordbahn")
+                        .zipCode(2231)
+                        .streetName("Billroth-Gasse")
+                        .streetNumber("5")
+                        .country("Austria")
+                        .build())
+                .transportType(TransportType.BIKE)
+                .build();
+        when(tourRepository.existsTourByName(eq(command.name()))).thenReturn(true);
+
+        // When
+        assertThrows(IllegalArgumentException.class, () -> tourService.createTour(command));
+    }
+
+    @Test
+    void ensureDeleteTourWorksProperly(){
+        tourService.deleteTour(tour.getId());
     }
 }
