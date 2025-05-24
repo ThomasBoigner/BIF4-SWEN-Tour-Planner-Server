@@ -1,6 +1,5 @@
 package at.fhtw.tourplanner.domain.util;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static at.fhtw.tourplanner.domain.util.EnsurerFactory.when;
@@ -11,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class LongEnsurerTest {
 
     @Test
-    void verifyLongEnsurer_isNotNull_goodCases(){
+    void verifyLongEnsurerIsNotNullGoodCases(){
         // Given
         Long value = 1L;
         String name = "B";
@@ -21,7 +20,7 @@ public class LongEnsurerTest {
     }
 
     @Test
-    void verifyLongEnsurer_isPositive_goodCases(){
+    void verifyLongEnsurerIsPositiveGoodCases(){
         // Given
         Long value = 1L;
         String name = "A";
@@ -31,7 +30,7 @@ public class LongEnsurerTest {
     }
 
     @Test
-    void verifyLongEnsurer_isNegative_goodCases(){
+    void verifyLongEnsurerIsNegativeGoodCases(){
         // Given
         long value = -1L;
 
@@ -40,36 +39,39 @@ public class LongEnsurerTest {
     }
 
     @Test
-    void verifyLongEnsurer_isNotNull_exceptionGetsThrown(){
+    void verifyLongEnsurerIsNotNullExceptionGetsThrown(){
         // Given
         Long value = null;
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isNotNull());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isNotNull());
 
         // Then
         assertEquals("value must not be null!", exception.getMessage());
     }
 
     @Test
-    void verifyLongEnsurer_isPositive_exceptionGetsThrown(){
+    void verifyLongEnsurerIsPositiveExceptionGetsThrown(){
         // Given
         long value = -1;
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isPositive());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isPositive());
 
         // Then
         assertEquals("value must be positive but was -1", exception.getMessage());
     }
 
     @Test
-    void verifyLongEnsurer_isNegative_exceptionGetsThrown(){
+    void verifyLongEnsurerIsNegativeExceptionGetsThrown(){
         // Given
         long value = 1;
 
         // When
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> when(value).isNegative());
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> when(value).isNegative());
 
         // Then
         assertEquals("value must be negative but was 1", exception.getMessage());
