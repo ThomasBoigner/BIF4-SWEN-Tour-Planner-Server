@@ -43,6 +43,8 @@ public class TourApplicationService {
     public TourDto createTour(CreateTourCommand command) {
         log.debug("Trying to create tour with command {}", command);
         Objects.requireNonNull(command, "command must not be null!");
+        Objects.requireNonNull(command.from(), "from must not be null!");
+        Objects.requireNonNull(command.to(), "to must not be null!");
 
         if (tourRepository.existsTourByName(command.name())) {
             throw new IllegalArgumentException("Tour with name %s already exists!"
