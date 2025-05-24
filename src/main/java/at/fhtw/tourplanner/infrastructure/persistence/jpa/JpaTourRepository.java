@@ -105,6 +105,11 @@ public class JpaTourRepository implements TourRepository {
         return tourEntityRepository.findTourEntityByTourId(id.id()).map(TourEntity::toTour);
     }
 
+    @Override
+    public void deleteTourById(TourId id) {
+        tourEntityRepository.deleteTourEntityByTourId(id.id());
+    }
+
     @PostConstruct
     void initDB() {
         save(tour1);

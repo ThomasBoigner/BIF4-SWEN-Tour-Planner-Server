@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface TourEntityRepository extends JpaRepository<TourEntity, Long> {
     Optional<TourEntity> findTourEntityByTourId(UUID id);
+    void deleteTourEntityByTourId(UUID id);
 }

@@ -41,4 +41,11 @@ public class TourRestController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @DeleteMapping(PATH_VAR_ID)
+    public HttpEntity<Void> deleteTour(@PathVariable UUID id) {
+        log.debug("Incoming Http DELETE request to delete tour with id {} received", id);
+        tourService.deleteTour(new TourId(id));
+        return ResponseEntity.ok().build();
+    }
 }

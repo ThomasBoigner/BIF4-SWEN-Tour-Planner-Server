@@ -91,4 +91,9 @@ public class TourApplicationServiceTest {
         // Then
         assertThat(tourDto.isPresent()).isFalse();
     }
+
+    @Test
+    void ensureDeleteTourWorksProperly(){
+        tourService.deleteTour(tour.getId());
+    }
 }

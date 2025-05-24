@@ -34,4 +34,10 @@ public class TourApplicationService {
                 () -> log.info("No tour with id {} found", id.id()));
         return tour;
     }
+
+    @Transactional(readOnly = false)
+    public void deleteTour(TourId id) {
+        tourRepository.deleteTourById(id);
+        log.info("Successfully deleted tour with id {}", id.id());
+    }
 }

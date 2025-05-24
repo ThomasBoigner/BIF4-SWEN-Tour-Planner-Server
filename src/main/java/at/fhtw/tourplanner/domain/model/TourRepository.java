@@ -7,4 +7,5 @@ public interface TourRepository {
     Tour save(Tour tour);
     List<Tour> findAll();
     Optional<Tour> findTourById(TourId id);
+    void deleteTourById(TourId id);
 }
