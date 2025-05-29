@@ -1,7 +1,8 @@
 package at.fhtw.tourplanner.application.presentation;
 
-import at.fhtw.tourplanner.application.service.TourApplicationService;
+import at.fhtw.tourplanner.application.service.TourService;
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
+import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.domain.model.TourId;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping(value = TourRestController.BASE_URL)
 public class TourRestController {
-    private final TourApplicationService tourService;
+    private final TourService tourService;
 
     public static final String BASE_URL = "/api/tour";
     public static final String PATH_INDEX = "/";
@@ -52,6 +53,15 @@ public class TourRestController {
         log.debug("Incoming Http POST request with create tour command {} received", command);
         TourDto tour = tourService.createTour(command);
         return ResponseEntity.created(createSelfLink(tour)).body(tour);
+    }
+
+    @PutMapping(PATH_VAR_ID)
+    public HttpEntity<TourDto> updateTour(@PathVariable UUID id,
+                                          @RequestBody UpdateTourCommand command) {
+        log.debug("Incoming Http PUT request for id {} with update tour command {} received",
+                id,
+                command);
+        return ResponseEntity.ok(tourService.updateTour(new TourId(id), command));
     }
 
     @DeleteMapping(PATH_VAR_ID)

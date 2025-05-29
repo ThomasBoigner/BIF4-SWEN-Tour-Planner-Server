@@ -22,15 +22,15 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TourApplicationServiceTest {
-    private TourApplicationService tourService;
+public class TourServiceTest {
+    private TourService tourService;
     @Mock
     private TourRepository tourRepository;
     private Tour tour;
 
     @BeforeEach
     void setUp() {
-        tourService = new TourApplicationService(tourRepository);
+        tourService = new TourService(tourRepository);
 
         tour = Tour.builder()
                 .name("Tour 1")

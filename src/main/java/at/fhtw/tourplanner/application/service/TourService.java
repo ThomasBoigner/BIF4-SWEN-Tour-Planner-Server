@@ -1,6 +1,7 @@
 package at.fhtw.tourplanner.application.service;
 
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
+import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-public class TourApplicationService {
+public class TourService {
     private final TourRepository tourRepository;
 
     public List<TourDto> getTours() {
@@ -77,6 +78,18 @@ public class TourApplicationService {
         tourRepository.save(tour);
         log.info("Created tour {}", tour);
         return new TourDto(tour);
+    }
+
+    @Transactional(readOnly = false)
+    public TourDto updateTour(TourId id, UpdateTourCommand command) {
+        Objects.requireNonNull(command, "command must not be null!");
+        Objects.requireNonNull(id, "id must not be null!");
+        Objects.requireNonNull(command.from(), "from must not be null!");
+        Objects.requireNonNull(command.to(), "to must not be null!");
+
+
+
+        return null;
     }
 
     @Transactional(readOnly = false)
