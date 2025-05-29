@@ -1,4 +1,4 @@
-package at.fhtw.tourplanner.infrastructure.persistence.jpa;
+package at.fhtw.tourplanner.infrastructure.persistence.jpa.model;
 
 import at.fhtw.tourplanner.domain.model.Address;
 import jakarta.persistence.Embeddable;

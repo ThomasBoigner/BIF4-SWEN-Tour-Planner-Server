@@ -1,4 +1,4 @@
-package at.fhtw.tourplanner.infrastructure.persistence.jpa;
+package at.fhtw.tourplanner.infrastructure.persistence.jpa.model;
 
 import at.fhtw.tourplanner.domain.model.Tour;
 import at.fhtw.tourplanner.domain.model.TourId;
@@ -28,6 +28,13 @@ public class TourEntity {
     })
     private AddressEmbeddable from;
     @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "country", column = @Column(name = "to_country")),
+        @AttributeOverride(name = "city", column = @Column(name = "to_city")),
+        @AttributeOverride(name = "zipCode", column = @Column(name = "to_zip_code")),
+        @AttributeOverride(name = "streetName", column = @Column(name = "to_street_name")),
+        @AttributeOverride(name = "streetNumber", column = @Column(name = "to_street_number"))
+    })
     private AddressEmbeddable to;
     private TransportType transportType;
     private double distance;

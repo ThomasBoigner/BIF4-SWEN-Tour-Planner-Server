@@ -32,6 +32,7 @@ public class TourLog {
                    double distance,
                    Rating rating) {
         this.id = new TourLogId();
+        setTour(tour);
         setDuration(duration);
         setComment(comment);
         setDifficulty(difficulty);
