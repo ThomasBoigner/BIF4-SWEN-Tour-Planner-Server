@@ -1,8 +1,9 @@
 package at.fhtw.tourplanner.application.presentation;
 
-import at.fhtw.tourplanner.application.service.TourApplicationService;
+import at.fhtw.tourplanner.application.service.TourService;
 import at.fhtw.tourplanner.application.service.commands.CreateAddressCommand;
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
+import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
@@ -34,7 +35,7 @@ public class TourRestControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private TourApplicationService tourService;
+    private TourService tourService;
 
     private Tour tour;
     private TourDto tourDto;
@@ -155,6 +156,42 @@ public class TourRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(redirectedUrl("/api/tour/" + tourDto.id()))
+                .andExpect(content().string(objectMapper.writeValueAsString(tourDto)));
+    }
+
+    @Test
+    void ensureUpdateTourWorksProperly() throws Exception {
+        // When
+        UpdateTourCommand command = UpdateTourCommand.builder()
+                .name("Tour 1")
+                .description("This tour is awesome")
+                .from(CreateAddressCommand.builder()
+                        .city("Deutsch Wagram")
+                        .zipCode(2232)
+                        .streetName("Radetzkystraße")
+                        .streetNumber("2-6")
+                        .country("Austria")
+                        .build())
+                .to(CreateAddressCommand.builder()
+                        .city("Strasshof an der Nordbahn")
+                        .zipCode(2231)
+                        .streetName("Billroth-Gasse")
+                        .streetNumber("5")
+                        .country("Austria")
+                        .build())
+                .transportType(TransportType.BIKE)
+                .build();
+
+        when(tourService.updateTour(eq(tour.getId()), eq(command))).thenReturn(tourDto);
+
+        // Perform
+        mockMvc.perform(put("/api/tour/%s".formatted(tour.getId().id()))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(command)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(objectMapper.writeValueAsString(tourDto)));
     }
 

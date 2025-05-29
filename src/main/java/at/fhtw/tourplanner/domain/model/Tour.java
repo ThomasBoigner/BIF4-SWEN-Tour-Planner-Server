@@ -34,22 +34,12 @@ public class Tour {
                 double distance,
                 double estimatedTime,
                 String imageUrl) {
-        Objects.requireNonNull(from, "from must not be null");
-        Objects.requireNonNull(to, "to must not be null");
-        Objects.requireNonNull(transportType, "transport type must not be null");
-
         this.id = new TourId();
-        this.name = when(name, "tour name")
-                .isNotNull().and()
-                .isNotEmpty().and()
-                .isNotBlank().thenAssign();
-        this.description = when(description, "tour description")
-                .isNotNull().and()
-                .isNotEmpty().and()
-                .isNotBlank().thenAssign();
-        this.from = from;
-        this.to = to;
-        this.transportType = transportType;
+        setName(name);
+        setDescription(description);
+        setFrom(from);
+        setTo(to);
+        setTransportType(transportType);
         this.distance = when(distance, "distance").isPositive().thenAssign();
         this.estimatedTime = when(estimatedTime, "estimated time").isPositive().thenAssign();
         this.imageUrl = when(imageUrl)
@@ -70,5 +60,34 @@ public class Tour {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public void setName(String name) {
+        this.name = when(name, "tour name")
+                .isNotNull().and()
+                .isNotEmpty().and()
+                .isNotBlank().thenAssign();
+    }
+
+    public void setDescription(String description) {
+        this.description = when(description, "tour description")
+                .isNotNull().and()
+                .isNotEmpty().and()
+                .isNotBlank().thenAssign();
+    }
+
+    public void setFrom(Address from) {
+        Objects.requireNonNull(from, "from must not be null");
+        this.from = from;
+    }
+
+    public void setTo(Address to) {
+        Objects.requireNonNull(to, "to must not be null");
+        this.to = to;
+    }
+
+    public void setTransportType(TransportType transportType) {
+        Objects.requireNonNull(transportType, "transport type must not be null");
+        this.transportType = transportType;
     }
 }

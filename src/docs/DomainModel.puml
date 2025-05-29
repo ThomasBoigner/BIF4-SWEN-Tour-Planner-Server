@@ -40,7 +40,7 @@ class ChildFriendliness <<ValueObject>> {
 
 class TourLog <<Entity>> {
     id: TourLogId
-    tourId: tourId
+    tour: Tour
     duration: Duration
     comment: String
     difficulty: Difficulty
@@ -72,7 +72,7 @@ Tour -- TransportType
 Tour -- ChildFriendliness
 
 TourLog -- TourLogId
-TourLog -- TourId
+TourLog "n" o-right-* "1" Tour
 TourLog -- Duration
 TourLog -- Difficulty
 TourLog -- Rating

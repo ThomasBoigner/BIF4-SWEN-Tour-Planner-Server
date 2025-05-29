@@ -1,4 +1,4 @@
-package at.fhtw.tourplanner.infrastructure.persistence.jpa;
+package at.fhtw.tourplanner.infrastructure.persistence.jpa.model;
 
 import at.fhtw.tourplanner.domain.model.Tour;
 import at.fhtw.tourplanner.domain.model.TourId;
@@ -15,9 +15,7 @@ import java.util.UUID;
 @Entity
 public class TourEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private UUID tourId;
+    private UUID id;
     private String name;
     private String description;
     @Embedded
@@ -30,6 +28,13 @@ public class TourEntity {
     })
     private AddressEmbeddable from;
     @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "country", column = @Column(name = "to_country")),
+        @AttributeOverride(name = "city", column = @Column(name = "to_city")),
+        @AttributeOverride(name = "zipCode", column = @Column(name = "to_zip_code")),
+        @AttributeOverride(name = "streetName", column = @Column(name = "to_street_name")),
+        @AttributeOverride(name = "streetNumber", column = @Column(name = "to_street_number"))
+    })
     private AddressEmbeddable to;
     private TransportType transportType;
     private double distance;
@@ -37,7 +42,7 @@ public class TourEntity {
     private String imageUrl;
 
     public TourEntity(Tour tour) {
-        this.tourId = tour.getId().id();
+        this.id = tour.getId().id();
         this.name = tour.getName();
         this.description = tour.getDescription();
         this.from = new AddressEmbeddable(tour.getFrom());
@@ -50,7 +55,7 @@ public class TourEntity {
 
     public Tour toTour() {
         return new Tour(
-                new TourId(this.tourId),
+                new TourId(this.id),
                 this.name,
                 this.description,
                 this.from.toAddress(),

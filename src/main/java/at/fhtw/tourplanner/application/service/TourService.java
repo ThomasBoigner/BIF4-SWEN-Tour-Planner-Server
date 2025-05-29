@@ -1,6 +1,7 @@
 package at.fhtw.tourplanner.application.service;
 
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
+import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-public class TourApplicationService {
+public class TourService {
     private final TourRepository tourRepository;
 
     public List<TourDto> getTours() {
@@ -77,6 +78,54 @@ public class TourApplicationService {
         tourRepository.save(tour);
         log.info("Created tour {}", tour);
         return new TourDto(tour);
+    }
+
+    @Transactional(readOnly = false)
+    public TourDto updateTour(TourId id, UpdateTourCommand command) {
+        log.debug("Trying to update tour with id {} and command {}", id.id(), command);
+        Objects.requireNonNull(command, "command must not be null!");
+        Objects.requireNonNull(id, "id must not be null!");
+        Objects.requireNonNull(command.from(), "from must not be null!");
+        Objects.requireNonNull(command.to(), "to must not be null!");
+
+        Optional<Tour> entity = tourRepository.findTourById(id);
+
+        if (entity.isEmpty()) {
+            log.warn("Tour with id {} can not be found!", id.id());
+            throw new IllegalArgumentException(
+                    "Tour with id %s can not be found!".formatted(id.id()));
+        }
+
+
+        Tour tour = entity.get();
+
+        if (!tour.getName().equals(command.name()) &&
+                tourRepository.existsTourByName(command.name())) {
+            throw new IllegalArgumentException("Tour with name %s already exists!"
+                    .formatted(command.name()));
+        }
+
+        tour.setName(command.name());
+        tour.setDescription(command.description());
+        tour.setFrom(Address.builder()
+                .streetName(command.from().streetName())
+                .streetNumber(command.from().streetNumber())
+                .city(command.from().city())
+                .zipCode(command.from().zipCode())
+                .country(command.from().country())
+                .build()
+        );
+        tour.setTo(Address.builder()
+                .streetName(command.to().streetName())
+                .streetNumber(command.to().streetNumber())
+                .city(command.to().city())
+                .zipCode(command.to().zipCode())
+                .country(command.to().country())
+                .build());
+        tour.setTransportType(command.transportType());
+
+        log.info("Successfully updated tour {}", tour);
+        return new TourDto(tourRepository.save(tour));
     }
 
     @Transactional(readOnly = false)
