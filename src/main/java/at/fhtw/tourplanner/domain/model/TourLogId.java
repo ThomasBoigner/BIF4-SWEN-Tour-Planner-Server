@@ -8,13 +8,13 @@ import java.util.UUID;
 
 @Slf4j
 @Builder
-public record TourId(UUID id) {
-    public TourId {
-        Objects.requireNonNull(id, "tour id must not be null");
+public record TourLogId(UUID id) {
+    public TourLogId {
+        Objects.requireNonNull(id, "tour log id must not be null");
     }
 
-    public TourId() {
+    public TourLogId() {
         this(UUID.randomUUID());
-        log.debug("Created tour id: {}", this);
+        log.debug("Created tour log id: {}", this);
     }
 }
