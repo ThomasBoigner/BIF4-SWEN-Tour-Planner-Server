@@ -107,12 +107,12 @@ public class JpaTourRepository implements TourRepository {
 
     @Override
     public Optional<Tour> findTourById(TourId id) {
-        return tourEntityRepository.findTourEntityByTourId(id.id()).map(TourEntity::toTour);
+        return tourEntityRepository.findTourEntityById(id.id()).map(TourEntity::toTour);
     }
 
     @Override
     public void deleteTourById(TourId id) {
-        tourEntityRepository.deleteTourEntityByTourId(id.id());
+        tourEntityRepository.deleteTourEntityById(id.id());
     }
 
     @PostConstruct

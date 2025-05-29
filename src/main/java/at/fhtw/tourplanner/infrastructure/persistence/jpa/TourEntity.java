@@ -15,9 +15,7 @@ import java.util.UUID;
 @Entity
 public class TourEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private UUID tourId;
+    private UUID id;
     private String name;
     private String description;
     @Embedded
@@ -37,7 +35,7 @@ public class TourEntity {
     private String imageUrl;
 
     public TourEntity(Tour tour) {
-        this.tourId = tour.getId().id();
+        this.id = tour.getId().id();
         this.name = tour.getName();
         this.description = tour.getDescription();
         this.from = new AddressEmbeddable(tour.getFrom());
@@ -50,7 +48,7 @@ public class TourEntity {
 
     public Tour toTour() {
         return new Tour(
-                new TourId(this.tourId),
+                new TourId(this.id),
                 this.name,
                 this.description,
                 this.from.toAddress(),

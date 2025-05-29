@@ -82,14 +82,50 @@ public class TourService {
 
     @Transactional(readOnly = false)
     public TourDto updateTour(TourId id, UpdateTourCommand command) {
+        log.debug("Trying to update tour with id {} and command {}", id.id(), command);
         Objects.requireNonNull(command, "command must not be null!");
         Objects.requireNonNull(id, "id must not be null!");
         Objects.requireNonNull(command.from(), "from must not be null!");
         Objects.requireNonNull(command.to(), "to must not be null!");
 
+        Optional<Tour> entity = tourRepository.findTourById(id);
+
+        if (entity.isEmpty()) {
+            log.warn("Tour with id {} can not be found!", id.id());
+            throw new IllegalArgumentException(
+                    "Tour with id %s can not be found!".formatted(id.id()));
+        }
 
 
-        return null;
+        Tour tour = entity.get();
+
+        if (!tour.getName().equals(command.name()) &&
+                tourRepository.existsTourByName(command.name())) {
+            throw new IllegalArgumentException("Tour with name %s already exists!"
+                    .formatted(command.name()));
+        }
+
+        tour.setName(command.name());
+        tour.setDescription(command.description());
+        tour.setFrom(Address.builder()
+                .streetName(command.from().streetName())
+                .streetNumber(command.from().streetNumber())
+                .city(command.from().city())
+                .zipCode(command.from().zipCode())
+                .country(command.from().country())
+                .build()
+        );
+        tour.setTo(Address.builder()
+                .streetName(command.to().streetName())
+                .streetNumber(command.to().streetNumber())
+                .city(command.to().city())
+                .zipCode(command.to().zipCode())
+                .country(command.to().country())
+                .build());
+        tour.setTransportType(command.transportType());
+
+        log.info("Successfully updated tour {}", tour);
+        return new TourDto(tourRepository.save(tour));
     }
 
     @Transactional(readOnly = false)
