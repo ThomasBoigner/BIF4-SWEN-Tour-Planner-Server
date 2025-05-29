@@ -1,7 +1,6 @@
 package at.fhtw.tourplanner.infrastructure.persistence.jpa;
 
 import at.fhtw.tourplanner.domain.model.*;
-import at.fhtw.tourplanner.infrastructure.persistence.jpa.model.DurationEmbeddable;
 import at.fhtw.tourplanner.infrastructure.persistence.jpa.model.TourLogEntity;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 

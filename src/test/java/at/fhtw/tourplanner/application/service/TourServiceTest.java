@@ -121,7 +121,8 @@ public class TourServiceTest {
                 .transportType(TransportType.BIKE)
                 .build();
         when(tourRepository.existsTourByName(eq(command.name()))).thenReturn(false);
-        when(tourRepository.save(any(Tour.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
+        when(tourRepository.save(any(Tour.class)))
+                .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
         // When
         TourDto tourDto = tourService.createTour(command);
@@ -199,7 +200,8 @@ public class TourServiceTest {
                 .build();
         when(tourRepository.findTourById(eq(tour.getId()))).thenReturn(Optional.of(tour));
         when(tourRepository.existsTourByName(eq(command.name()))).thenReturn(false);
-        when(tourRepository.save(any(Tour.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
+        when(tourRepository.save(any(Tour.class)))
+                .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
         // When
         TourDto tourDto = tourService.updateTour(tour.getId(), command);
@@ -250,7 +252,8 @@ public class TourServiceTest {
         when(tourRepository.findTourById(eq(tour.getId()))).thenReturn(Optional.empty());
 
         // When
-        assertThrows(IllegalArgumentException.class, () -> tourService.updateTour(tour.getId(), command));
+        assertThrows(IllegalArgumentException.class,
+                () -> tourService.updateTour(tour.getId(), command));
     }
 
     @Test
@@ -279,7 +282,8 @@ public class TourServiceTest {
         when(tourRepository.existsTourByName(eq(command.name()))).thenReturn(true);
 
         // When
-        assertThrows(IllegalArgumentException.class, () -> tourService.updateTour(tour.getId(), command));
+        assertThrows(IllegalArgumentException.class,
+                () -> tourService.updateTour(tour.getId(), command));
     }
 
     @Test
@@ -305,7 +309,8 @@ public class TourServiceTest {
                 .transportType(TransportType.BIKE)
                 .build();
         when(tourRepository.findTourById(eq(tour.getId()))).thenReturn(Optional.of(tour));
-        when(tourRepository.save(any(Tour.class))).thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
+        when(tourRepository.save(any(Tour.class)))
+                .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
         // When
         assertDoesNotThrow(() -> tourService.updateTour(tour.getId(), command));

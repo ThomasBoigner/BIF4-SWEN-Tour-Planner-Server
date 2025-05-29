@@ -41,7 +41,8 @@ public class TourLogRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new TourLogRestController(tourLogService)).build();
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(new TourLogRestController(tourLogService)).build();
 
         objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
@@ -91,7 +92,8 @@ public class TourLogRestControllerTest {
         when(tourLogService.getTourLogsOfTour(eq(tour.getId()))).thenReturn(List.of(tourLogDto));
 
         // Perform
-        mockMvc.perform(get("/api/tourLog/tour/%s".formatted(tour.getId().id())).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/tourLog/tour/%s".formatted(tour.getId().id()))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -104,7 +106,8 @@ public class TourLogRestControllerTest {
         when(tourLogService.getTourLogsOfTour(eq(tour.getId()))).thenReturn(List.of());
 
         // Perform
-        mockMvc.perform(get("/api/tourLog/tour/%s".formatted(tour.getId().id())).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/tourLog/tour/%s".formatted(tour.getId().id()))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
     }
