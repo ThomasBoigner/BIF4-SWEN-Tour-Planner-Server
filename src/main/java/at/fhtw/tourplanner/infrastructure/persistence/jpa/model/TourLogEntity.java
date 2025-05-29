@@ -36,7 +36,7 @@ public class TourLogEntity {
         this.rating = tourLog.getRating().rating();
     }
 
-    public TourLog tourLog() {
+    public TourLog toTourLog() {
         return new TourLog(
                 new TourLogId(this.id),
                 this.tour.toTour(),

@@ -38,6 +38,8 @@ public class TourLog {
         setDifficulty(difficulty);
         setDistance(distance);
         setRating(rating);
+
+        log.debug("Created tour log {}", this);
     }
 
     @Override

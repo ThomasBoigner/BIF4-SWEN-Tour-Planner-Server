@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 
@@ -68,6 +70,12 @@ public class JpaTourLogRepository implements TourLogRepository {
     public TourLog save(TourLog tourLog) {
         tourLogEntityRepository.save(new TourLogEntity(tourLog));
         return tourLog;
+    }
+
+    @Override
+    public List<TourLog> findAllByTourId(TourId tourId) {
+        return tourLogEntityRepository.findAllByTourId(tourId.id())
+                .stream().map(TourLogEntity::toTourLog).toList();
     }
 
     @PostConstruct
