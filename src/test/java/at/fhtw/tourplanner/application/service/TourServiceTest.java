@@ -4,6 +4,8 @@ import at.fhtw.tourplanner.application.service.commands.CreateAddressCommand;
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
 import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
+import at.fhtw.tourplanner.application.service.mappers.AddressDtoMapper;
+import at.fhtw.tourplanner.application.service.mappers.TourDtoMapper;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
 import at.fhtw.tourplanner.domain.model.TourRepository;
@@ -27,13 +29,15 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class TourServiceTest {
     private TourService tourService;
+    private TourDtoMapper tourDtoMapper;
     @Mock
     private TourRepository tourRepository;
     private Tour tour;
 
     @BeforeEach
     void setUp() {
-        tourService = new TourService(tourRepository);
+        tourDtoMapper = new TourDtoMapper(new AddressDtoMapper());
+        tourService = new TourService(tourRepository, tourDtoMapper);
 
         tour = Tour.builder()
                 .name("Tour 1")
@@ -70,7 +74,7 @@ public class TourServiceTest {
         List<TourDto> tours = tourService.getTours();
 
         // Then
-        assertThat(tours).contains(new TourDto(tour));
+        assertThat(tours).contains(tourDtoMapper.toDto(tour));
     }
 
     @Test
@@ -83,7 +87,7 @@ public class TourServiceTest {
 
         // Then
         assertThat(tourDto.isPresent()).isTrue();
-        assertThat(tourDto.get()).isEqualTo(new TourDto(tour));
+        assertThat(tourDto.get()).isEqualTo(tourDtoMapper.toDto(tour));
     }
 
     @Test

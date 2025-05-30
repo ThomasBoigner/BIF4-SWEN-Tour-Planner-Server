@@ -18,7 +18,9 @@ public class TourLogEntityMapperTest {
 
     @BeforeEach
     void setUp() {
-        tourLogEntityMapper = new TourLogEntityMapper(new TourEntityMapper(new AddressEmbeddableMapper()), new DurationEmbeddableMapper());
+        tourLogEntityMapper = new TourLogEntityMapper(
+                new TourEntityMapper(new AddressEmbeddableMapper()),
+                new DurationEmbeddableMapper());
     }
 
     @Test
@@ -67,8 +69,10 @@ public class TourLogEntityMapperTest {
         // Then
         assertThat(tourLog.getId().id()).isEqualTo(tourLogEntity.getId());
         assertThat(tourLog.getTour().getId().id()).isEqualTo(tourLogEntity.getTour().getId());
-        assertThat(tourLog.getDuration().startTime()).isEqualTo(tourLogEntity.getDuration().getStartTime());
-        assertThat(tourLog.getDuration().endTime()).isEqualTo(tourLogEntity.getDuration().getEndTime());
+        assertThat(tourLog.getDuration().startTime())
+                .isEqualTo(tourLogEntity.getDuration().getStartTime());
+        assertThat(tourLog.getDuration().endTime())
+                .isEqualTo(tourLogEntity.getDuration().getEndTime());
         assertThat(tourLog.getComment()).isEqualTo(tourLogEntity.getComment());
         assertThat(tourLog.getDifficulty().difficulty()).isEqualTo(tourLogEntity.getDifficulty());
         assertThat(tourLog.getDistance()).isEqualTo(tourLogEntity.getDistance());
@@ -119,8 +123,10 @@ public class TourLogEntityMapperTest {
         // Then
         assertThat(tourLog.getId().id()).isEqualTo(tourLogEntity.getId());
         assertThat(tourLog.getTour().getId().id()).isEqualTo(tourLogEntity.getTour().getId());
-        assertThat(tourLog.getDuration().startTime()).isEqualTo(tourLogEntity.getDuration().getStartTime());
-        assertThat(tourLog.getDuration().endTime()).isEqualTo(tourLogEntity.getDuration().getEndTime());
+        assertThat(tourLog.getDuration().startTime())
+                .isEqualTo(tourLogEntity.getDuration().getStartTime());
+        assertThat(tourLog.getDuration().endTime())
+                .isEqualTo(tourLogEntity.getDuration().getEndTime());
         assertThat(tourLog.getComment()).isEqualTo(tourLogEntity.getComment());
         assertThat(tourLog.getDifficulty().difficulty()).isEqualTo(tourLogEntity.getDifficulty());
         assertThat(tourLog.getDistance()).isEqualTo(tourLogEntity.getDistance());

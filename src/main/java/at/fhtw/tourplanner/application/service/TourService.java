@@ -3,6 +3,7 @@ package at.fhtw.tourplanner.application.service;
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
 import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
+import at.fhtw.tourplanner.application.service.mappers.TourDtoMapper;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
 import at.fhtw.tourplanner.domain.model.TourId;
@@ -23,17 +24,18 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class TourService {
     private final TourRepository tourRepository;
+    private final TourDtoMapper tourDtoMapper;
 
     public List<TourDto> getTours() {
         log.debug("Trying to get all tours");
-        List<TourDto> tours = tourRepository.findAll().stream().map(TourDto::new).toList();
+        List<TourDto> tours = tourRepository.findAll().stream().map(tourDtoMapper::toDto).toList();
         log.info("Retrieved all ({}) tours", tours.size());
         return tours;
     }
 
     public Optional<TourDto> getTour(TourId id) {
         log.debug("Trying to get tour with id {}", id);
-        Optional<TourDto> tour = tourRepository.findTourById(id).map(TourDto::new);
+        Optional<TourDto> tour = tourRepository.findTourById(id).map(tourDtoMapper::toDto);
         tour.ifPresentOrElse(
                 t -> log.info("Found tour {} with id {}", t, id.id()),
                 () -> log.info("No tour with id {} found", id.id()));
@@ -77,7 +79,7 @@ public class TourService {
 
         tourRepository.save(tour);
         log.info("Created tour {}", tour);
-        return new TourDto(tour);
+        return tourDtoMapper.toDto(tour);
     }
 
     @Transactional(readOnly = false)
@@ -125,7 +127,7 @@ public class TourService {
         tour.setTransportType(command.transportType());
 
         log.info("Successfully updated tour {}", tour);
-        return new TourDto(tourRepository.save(tour));
+        return tourDtoMapper.toDto(tourRepository.save(tour));
     }
 
     @Transactional(readOnly = false)

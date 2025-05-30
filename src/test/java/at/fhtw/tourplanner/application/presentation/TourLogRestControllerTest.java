@@ -2,6 +2,8 @@ package at.fhtw.tourplanner.application.presentation;
 
 import at.fhtw.tourplanner.application.service.TourLogService;
 import at.fhtw.tourplanner.application.service.dto.TourLogDto;
+import at.fhtw.tourplanner.application.service.mappers.DurationDtoMapper;
+import at.fhtw.tourplanner.application.service.mappers.TourLogDtoMapper;
 import at.fhtw.tourplanner.domain.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -32,6 +34,7 @@ public class TourLogRestControllerTest {
 
     @Mock
     private TourLogService tourLogService;
+    private TourLogDtoMapper tourLogDtoMapper;
 
     private Tour tour;
     private TourLog tourLog;
@@ -45,6 +48,7 @@ public class TourLogRestControllerTest {
                 .standaloneSetup(new TourLogRestController(tourLogService)).build();
 
         objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        tourLogDtoMapper = new TourLogDtoMapper(new DurationDtoMapper());
 
         tour = Tour.builder()
                 .name("Tour 1")
@@ -83,7 +87,7 @@ public class TourLogRestControllerTest {
                 .rating(new Rating(5))
                 .build();
 
-        tourLogDto = new TourLogDto(tourLog);
+        tourLogDto = tourLogDtoMapper.toDto(tourLog);
     }
 
     @Test

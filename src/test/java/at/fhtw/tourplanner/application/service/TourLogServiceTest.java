@@ -1,6 +1,8 @@
 package at.fhtw.tourplanner.application.service;
 
 import at.fhtw.tourplanner.application.service.dto.TourLogDto;
+import at.fhtw.tourplanner.application.service.mappers.DurationDtoMapper;
+import at.fhtw.tourplanner.application.service.mappers.TourLogDtoMapper;
 import at.fhtw.tourplanner.domain.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +20,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class TourLogServiceTest {
     private TourLogService tourLogService;
+    private TourLogDtoMapper tourLogDtoMapper;
     @Mock
     private TourLogRepository tourLogRepository;
     private Tour tour;
@@ -25,7 +28,8 @@ public class TourLogServiceTest {
 
     @BeforeEach
     void setUp() {
-        tourLogService = new TourLogService(tourLogRepository);
+        tourLogDtoMapper = new TourLogDtoMapper(new DurationDtoMapper());
+        tourLogService = new TourLogService(tourLogRepository, tourLogDtoMapper);
 
         tour = Tour.builder()
                 .name("Tour 1")
@@ -74,6 +78,6 @@ public class TourLogServiceTest {
         List<TourLogDto> tourLogs = tourLogService.getTourLogsOfTour(tour.getId());
 
         // Then
-        assertThat(tourLogs).contains(new TourLogDto(tourLog));
+        assertThat(tourLogs).contains(tourLogDtoMapper.toDto(tourLog));
     }
 }

@@ -2,7 +2,6 @@ package at.fhtw.tourplanner.infrastructure.persistence.jpa;
 
 import at.fhtw.tourplanner.domain.model.*;
 import at.fhtw.tourplanner.infrastructure.persistence.jpa.mapper.TourLogEntityMapper;
-import at.fhtw.tourplanner.infrastructure.persistence.jpa.model.TourLogEntity;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

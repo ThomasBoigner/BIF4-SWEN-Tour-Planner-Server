@@ -5,6 +5,8 @@ import at.fhtw.tourplanner.application.service.commands.CreateAddressCommand;
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
 import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
+import at.fhtw.tourplanner.application.service.mappers.AddressDtoMapper;
+import at.fhtw.tourplanner.application.service.mappers.TourDtoMapper;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
 import at.fhtw.tourplanner.domain.model.TransportType;
@@ -36,6 +38,7 @@ public class TourRestControllerTest {
 
     @Mock
     private TourService tourService;
+    private TourDtoMapper tourDtoMapper;
 
     private Tour tour;
     private TourDto tourDto;
@@ -47,6 +50,7 @@ public class TourRestControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(new TourRestController(tourService)).build();
 
         objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        tourDtoMapper = new TourDtoMapper(new AddressDtoMapper());
 
         tour = Tour.builder()
                 .name("Tour 1")
@@ -71,7 +75,7 @@ public class TourRestControllerTest {
                 .imageUrl("img")
                 .build();
 
-        tourDto = new TourDto(tour);
+        tourDto = tourDtoMapper.toDto(tour);
     }
 
     @Test
