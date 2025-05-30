@@ -1,6 +1,7 @@
 package at.fhtw.tourplanner.infrastructure.persistence.jpa;
 
 import at.fhtw.tourplanner.domain.model.*;
+import at.fhtw.tourplanner.infrastructure.persistence.jpa.mapper.TourEntityMapper;
 import at.fhtw.tourplanner.infrastructure.persistence.jpa.model.TourEntity;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -64,10 +65,11 @@ public class JpaTourRepository implements TourRepository {
             .build();
 
     private final TourEntityRepository tourEntityRepository;
+    private final TourEntityMapper tourEntityMapper;
 
     @Override
     public Tour save(Tour tour) {
-        tourEntityRepository.save(new TourEntity(tour));
+        tourEntityRepository.save(tourEntityMapper.toEntity(tour));
         return tour;
     }
 
@@ -78,12 +80,14 @@ public class JpaTourRepository implements TourRepository {
 
     @Override
     public List<Tour> findAll() {
-        return tourEntityRepository.findAll().stream().map(TourEntity::toTour).toList();
+        return tourEntityMapper.toDomainObjects(tourEntityRepository.findAll());
     }
 
     @Override
     public Optional<Tour> findTourById(TourId id) {
-        return tourEntityRepository.findTourEntityById(id.id()).map(TourEntity::toTour);
+        return tourEntityRepository
+                .findTourEntityById(id.id())
+                .map(tourEntityMapper::toDomainObject);
     }
 
     @Override

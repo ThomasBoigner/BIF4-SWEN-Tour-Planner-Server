@@ -1,10 +1,8 @@
 package at.fhtw.tourplanner.infrastructure.persistence.jpa.model;
 
-import at.fhtw.tourplanner.domain.model.Difficulty;
-import at.fhtw.tourplanner.domain.model.Rating;
-import at.fhtw.tourplanner.domain.model.TourLog;
-import at.fhtw.tourplanner.domain.model.TourLogId;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +10,8 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 
 @Entity
 public class TourLogEntity {
@@ -25,26 +25,4 @@ public class TourLogEntity {
     private int difficulty;
     private double distance;
     private int rating;
-
-    public TourLogEntity(TourLog tourLog) {
-        this.id = tourLog.getId().id();
-        this.tour = new TourEntity(tourLog.getTour());
-        this.duration = new DurationEmbeddable(tourLog.getDuration());
-        this.comment = tourLog.getComment();
-        this.difficulty = tourLog.getDifficulty().difficulty();
-        this.distance = tourLog.getDistance();
-        this.rating = tourLog.getRating().rating();
-    }
-
-    public TourLog toTourLog() {
-        return new TourLog(
-                new TourLogId(this.id),
-                this.tour.toTour(),
-                this.duration.toDuration(),
-                this.comment,
-                new Difficulty(this.difficulty),
-                this.distance,
-                new Rating(this.rating)
-        );
-    }
 }
