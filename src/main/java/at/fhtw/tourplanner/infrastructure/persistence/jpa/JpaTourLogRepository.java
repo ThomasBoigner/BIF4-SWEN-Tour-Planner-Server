@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 
@@ -76,6 +77,18 @@ public class JpaTourLogRepository implements TourLogRepository {
         return tourLogEntityMapper.toDomainObjects(
                 tourLogEntityRepository.findAllByTourId(tourId.id())
         );
+    }
+
+    @Override
+    public Optional<TourLog> findTourEntityById(TourLogId id) {
+        return tourLogEntityRepository
+                .findById(id.id())
+                .map(tourLogEntityMapper::toDomainObject);
+    }
+
+    @Override
+    public void deleteTourLogById(TourLogId id) {
+        tourLogEntityRepository.deleteTourLogEntityById(id.id());
     }
 
     @PostConstruct

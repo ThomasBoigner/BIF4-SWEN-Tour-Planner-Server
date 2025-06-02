@@ -23,13 +23,15 @@ public class TourLogServiceTest {
     private TourLogDtoMapper tourLogDtoMapper;
     @Mock
     private TourLogRepository tourLogRepository;
+    @Mock
+    private TourRepository tourRepository;
     private Tour tour;
     private TourLog tourLog;
 
     @BeforeEach
     void setUp() {
         tourLogDtoMapper = new TourLogDtoMapper(new DurationDtoMapper());
-        tourLogService = new TourLogService(tourLogRepository, tourLogDtoMapper);
+        tourLogService = new TourLogService(tourLogRepository, tourRepository, tourLogDtoMapper);
 
         tour = Tour.builder()
                 .name("Tour 1")
