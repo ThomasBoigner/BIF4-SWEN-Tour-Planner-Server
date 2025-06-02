@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface TourLogEntityRepository extends JpaRepository<TourLogEntity, UUID> {
     List<TourLogEntity> findAllByTourId(UUID tourId);
-
     UUID tour(TourEntity tour);
+    void deleteTourLogEntityById(UUID id);
 }
