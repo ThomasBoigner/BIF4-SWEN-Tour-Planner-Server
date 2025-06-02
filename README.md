@@ -59,3 +59,9 @@ API Endpoints
     POST /api/tourLog — Create a new tour log
 
     DELETE /api/tourLog/{id} — Delete a tour log
+
+### Domain Model
+![Domain Model](src/docs/DomainModel.png)
+
+### Use Case Diagram
+![Use Case Diagram](src/docs/UseCase.png)

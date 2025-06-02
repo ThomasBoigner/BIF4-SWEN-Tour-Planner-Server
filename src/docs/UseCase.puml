@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+actor user
+rectangle client {
+    user -- (list tours)
+    user -- (create tour)
+    user -- (update tour)
+    user -- (delete tour)
+    user -- (view tour logs)
+    user -- (create tour logs)
+    user -- (update tour logs)
+    user -- (delete tour logs)
+    user -- (import/export tours)
+    user -- (generate reports)
+}
+rectangle server {
+    (list tours) --(list tours endpoint)
+    (create tour) -- (create tour endpoint)
+    (update tour) -- (update tour endpoint)
+    (delete tour) -- (delete tour endpoint)
+    (view tour logs) -- (view tour logs endpoint)
+    (create tour logs) -- (create tour logs endpoint)
+    (update tour logs) -- (update tour logs endpoint)
+    (delete tour logs) -- (delete tour logs endpoint)
+    (import/export tours) -- (import/export tours endpoint)
+    (generate reports) -- (generate reports endpoint)
+}
+@enduml
