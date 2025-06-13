@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -18,6 +19,11 @@ import java.util.UUID;
 public class TourEntity {
     @Id
     private UUID id;
+    @OneToMany(
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE},
+            mappedBy = "tour"
+    )
+    private List<TourLogEntity> tourLogs;
     private String name;
     private String description;
     @Embedded

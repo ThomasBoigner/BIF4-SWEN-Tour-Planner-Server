@@ -18,6 +18,7 @@ public class TourLogEntity {
     @Id
     private UUID id;
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_tour"))
     private TourEntity tour;
     @Embedded
     private DurationEmbeddable duration;
