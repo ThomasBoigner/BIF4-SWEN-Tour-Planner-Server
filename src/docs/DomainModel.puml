@@ -25,6 +25,8 @@ class Address <<ValueObject>> {
     zipCode: int
     streetName: String
     streetNumber: String
+    latitude: double
+    longitude: double
 }
 
 enum TransportType {

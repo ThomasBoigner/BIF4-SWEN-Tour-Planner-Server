@@ -18,4 +18,6 @@ public class AddressEmbeddable {
     private int zipCode;
     private String streetName;
     private String streetNumber;
+    private double latitude;
+    private double longitude;
 }

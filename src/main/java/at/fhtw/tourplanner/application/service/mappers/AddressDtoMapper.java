@@ -15,6 +15,8 @@ public class AddressDtoMapper extends AbstractDtoMapper<Address, AddressDto> {
                 .zipCode(domainObject.zipCode())
                 .streetName(domainObject.streetName())
                 .streetNumber(domainObject.streetNumber())
+                .latitude(domainObject.latitude())
+                .longitude(domainObject.longitude())
                 .build();
     }
 }

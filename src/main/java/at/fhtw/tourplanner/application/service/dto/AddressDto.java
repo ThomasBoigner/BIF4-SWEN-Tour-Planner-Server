@@ -8,4 +8,7 @@ public record AddressDto(
         String city,
         int zipCode,
         String streetName,
-        String streetNumber) { }
+        String streetNumber,
+        double latitude,
+        double longitude
+) { }

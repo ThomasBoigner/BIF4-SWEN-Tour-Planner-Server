@@ -32,6 +32,8 @@ public class TourDtoMapperTest {
                         .streetName("Radetzkystraße")
                         .streetNumber("2-6")
                         .country("Austria")
+                        .latitude(50)
+                        .longitude(60)
                         .build())
                 .to(Address.builder()
                         .streetName("Austria")
@@ -40,6 +42,8 @@ public class TourDtoMapperTest {
                         .streetName("Billroth-Gasse")
                         .streetNumber("5")
                         .country("Austria")
+                        .latitude(70)
+                        .longitude(80)
                         .build())
                 .transportType(TransportType.BIKE)
                 .distance(20)
@@ -60,12 +64,16 @@ public class TourDtoMapperTest {
         assertThat(tour.getFrom().streetName()).isEqualTo(tourDto.from().streetName());
         assertThat(tour.getFrom().streetNumber()).isEqualTo(tourDto.from().streetNumber());
         assertThat(tour.getFrom().country()).isEqualTo(tourDto.from().country());
+        assertThat(tour.getFrom().latitude()).isEqualTo(tourDto.from().latitude());
+        assertThat(tour.getFrom().longitude()).isEqualTo(tourDto.from().longitude());
         assertThat(tour.getTo().streetName()).isEqualTo(tourDto.to().streetName());
         assertThat(tour.getTo().city()).isEqualTo(tourDto.to().city());
         assertThat(tour.getTo().zipCode()).isEqualTo(tourDto.to().zipCode());
         assertThat(tour.getTo().streetName()).isEqualTo(tourDto.to().streetName());
         assertThat(tour.getTo().streetNumber()).isEqualTo(tourDto.to().streetNumber());
         assertThat(tour.getTo().country()).isEqualTo(tourDto.to().country());
+        assertThat(tour.getTo().latitude()).isEqualTo(tourDto.to().latitude());
+        assertThat(tour.getTo().longitude()).isEqualTo(tourDto.to().longitude());
         assertThat(tour.getDistance()).isEqualTo(tourDto.distance());
         assertThat(tour.getEstimatedTime()).isEqualTo(tourDto.estimatedTime());
         assertThat(tour.getImageUrl()).isEqualTo(tourDto.imageUrl());

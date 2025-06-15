@@ -32,7 +32,9 @@ public class TourEntity {
         @AttributeOverride(name = "city", column = @Column(name = "from_city")),
         @AttributeOverride(name = "zipCode", column = @Column(name = "from_zip_code")),
         @AttributeOverride(name = "streetName", column = @Column(name = "from_street_name")),
-        @AttributeOverride(name = "streetNumber", column = @Column(name = "from_street_number"))
+        @AttributeOverride(name = "streetNumber", column = @Column(name = "from_street_number")),
+        @AttributeOverride(name = "latitude", column = @Column(name = "from_latitude")),
+        @AttributeOverride(name = "longitude", column = @Column(name = "from_longitude"))
     })
     private AddressEmbeddable from;
     @Embedded
@@ -41,7 +43,9 @@ public class TourEntity {
         @AttributeOverride(name = "city", column = @Column(name = "to_city")),
         @AttributeOverride(name = "zipCode", column = @Column(name = "to_zip_code")),
         @AttributeOverride(name = "streetName", column = @Column(name = "to_street_name")),
-        @AttributeOverride(name = "streetNumber", column = @Column(name = "to_street_number"))
+        @AttributeOverride(name = "streetNumber", column = @Column(name = "to_street_number")),
+        @AttributeOverride(name = "latitude", column = @Column(name = "to_latitude")),
+        @AttributeOverride(name = "longitude", column = @Column(name = "to_longitude"))
     })
     private AddressEmbeddable to;
     private TransportType transportType;
