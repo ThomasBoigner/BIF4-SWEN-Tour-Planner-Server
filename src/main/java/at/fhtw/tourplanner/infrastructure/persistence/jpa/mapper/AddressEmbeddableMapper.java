@@ -14,6 +14,8 @@ public class AddressEmbeddableMapper extends AbstractEntityMapper<Address, Addre
                 .zipCode(entity.getZipCode())
                 .streetName(entity.getStreetName())
                 .streetNumber(entity.getStreetNumber())
+                .latitude(entity.getLatitude())
+                .longitude(entity.getLongitude())
                 .build();
     }
 
@@ -25,6 +27,8 @@ public class AddressEmbeddableMapper extends AbstractEntityMapper<Address, Addre
                 .zipCode(domainObject.zipCode())
                 .streetName(domainObject.streetName())
                 .streetNumber(domainObject.streetNumber())
+                .latitude(domainObject.latitude())
+                .longitude(domainObject.longitude())
                 .build();
     }
 }

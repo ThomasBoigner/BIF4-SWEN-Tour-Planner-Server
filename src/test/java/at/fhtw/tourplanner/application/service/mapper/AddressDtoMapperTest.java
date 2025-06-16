@@ -26,6 +26,8 @@ public class AddressDtoMapperTest {
                 .streetName("Radetzkystraße")
                 .streetNumber("2-6")
                 .country("Austria")
+                .latitude(50)
+                .longitude(60)
                 .build();
 
         // When
@@ -38,5 +40,7 @@ public class AddressDtoMapperTest {
         assertThat(addressDto.streetName()).isEqualTo(address.streetName());
         assertThat(addressDto.streetNumber()).isEqualTo(address.streetNumber());
         assertThat(addressDto.country()).isEqualTo(address.country());
+        assertThat(addressDto.latitude()).isEqualTo(address.latitude());
+        assertThat(addressDto.longitude()).isEqualTo(address.longitude());
     }
 }

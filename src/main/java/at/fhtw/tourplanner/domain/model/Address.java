@@ -12,7 +12,9 @@ public record Address(
         String city,
         int zipCode,
         String streetName,
-        String streetNumber) {
+        String streetNumber,
+        double latitude,
+        double longitude) {
 
     public Address {
         when(country, "country").isNotNull().and().isNotEmpty().and().isNotBlank().thenAssign();

@@ -25,6 +25,8 @@ public class AddressEmbeddableMapperTest {
                 .streetName("Radetzkystraße")
                 .streetNumber("2-6")
                 .country("Austria")
+                .latitude(50)
+                .longitude(60)
                 .build();
 
         // When
@@ -37,6 +39,8 @@ public class AddressEmbeddableMapperTest {
         assertThat(addressEmbeddable.getStreetName()).isEqualTo(address.streetName());
         assertThat(addressEmbeddable.getStreetNumber()).isEqualTo(address.streetNumber());
         assertThat(addressEmbeddable.getCountry()).isEqualTo(address.country());
+        assertThat(addressEmbeddable.getLatitude()).isEqualTo(address.latitude());
+        assertThat(addressEmbeddable.getLongitude()).isEqualTo(address.longitude());
     }
 
     @Test
@@ -49,6 +53,8 @@ public class AddressEmbeddableMapperTest {
                 .streetName("Radetzkystraße")
                 .streetNumber("2-6")
                 .country("Austria")
+                .latitude(50)
+                .longitude(60)
                 .build();
 
         // When
@@ -61,5 +67,7 @@ public class AddressEmbeddableMapperTest {
         assertThat(addressEmbeddable.getStreetName()).isEqualTo(address.streetName());
         assertThat(addressEmbeddable.getStreetNumber()).isEqualTo(address.streetNumber());
         assertThat(addressEmbeddable.getCountry()).isEqualTo(address.country());
+        assertThat(addressEmbeddable.getLatitude()).isEqualTo(address.latitude());
+        assertThat(addressEmbeddable.getLongitude()).isEqualTo(address.longitude());
     }
 }
