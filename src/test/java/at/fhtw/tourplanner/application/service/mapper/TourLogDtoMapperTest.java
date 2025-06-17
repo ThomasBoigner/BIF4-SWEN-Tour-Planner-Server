@@ -45,7 +45,6 @@ public class TourLogDtoMapperTest {
                         .transportType(TransportType.BIKE)
                         .distance(20)
                         .estimatedTime(120)
-                        .imageUrl("img")
                         .build())
                 .duration(Duration.builder()
                         .startTime(LocalDateTime.of(2025, 1, 1, 12, 0, 0))

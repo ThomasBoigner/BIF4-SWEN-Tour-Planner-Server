@@ -4,6 +4,7 @@ import at.fhtw.tourplanner.application.service.commands.CreateAddressCommand;
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
 import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
 import at.fhtw.tourplanner.application.service.dto.CoordinateDto;
+import at.fhtw.tourplanner.application.service.dto.RouteInformationDto;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.application.service.mappers.AddressDtoMapper;
 import at.fhtw.tourplanner.application.service.mappers.TourDtoMapper;
@@ -35,12 +36,14 @@ public class TourServiceTest {
     private TourRepository tourRepository;
     @Mock
     private GeocodeSearchService geocodeSearchService;
+    @Mock
+    private RouteService routeService;
     private Tour tour;
 
     @BeforeEach
     void setUp() {
         tourDtoMapper = new TourDtoMapper(new AddressDtoMapper());
-        tourService = new TourService(tourRepository, tourDtoMapper, geocodeSearchService);
+        tourService = new TourService(tourRepository, tourDtoMapper, geocodeSearchService, routeService);
 
         tour = Tour.builder()
                 .name("Tour 1")
@@ -64,7 +67,6 @@ public class TourServiceTest {
                 .transportType(TransportType.BIKE)
                 .distance(20)
                 .estimatedTime(120)
-                .imageUrl("img")
                 .build();
     }
 
@@ -130,10 +132,12 @@ public class TourServiceTest {
         when(tourRepository.existsTourByName(eq(command.name()))).thenReturn(false);
         when(geocodeSearchService.getCoordinates(
                 eq("Radetzkystraße 2-6 2232 Deutsch Wagram Austria")))
-                .thenReturn(new CoordinateDto(50, 50));
+                .thenReturn(new CoordinateDto(40, 50));
         when(geocodeSearchService.getCoordinates(
                 eq("Billroth-Gasse 5 2231 Strasshof an der Nordbahn Austria")))
-                .thenReturn(new CoordinateDto(30, 30));
+                .thenReturn(new CoordinateDto(20, 30));
+        when(routeService.getRouteInformation(eq(40d), eq(50d), eq(20d), eq(30d)))
+                .thenReturn(new RouteInformationDto(10, 20));
         when(tourRepository.save(any(Tour.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
@@ -150,19 +154,18 @@ public class TourServiceTest {
         assertThat(tourDto.from().city()).isEqualTo(command.from().city());
         assertThat(tourDto.from().zipCode()).isEqualTo(command.from().zipCode());
         assertThat(tourDto.from().country()).isEqualTo(command.from().country());
-        assertThat(tourDto.from().latitude()).isEqualTo(50);
+        assertThat(tourDto.from().latitude()).isEqualTo(40);
         assertThat(tourDto.from().longitude()).isEqualTo(50);
         assertThat(tourDto.to().streetName()).isEqualTo(command.to().streetName());
         assertThat(tourDto.to().streetNumber()).isEqualTo(command.to().streetNumber());
         assertThat(tourDto.to().city()).isEqualTo(command.to().city());
         assertThat(tourDto.to().zipCode()).isEqualTo(command.to().zipCode());
         assertThat(tourDto.to().country()).isEqualTo(command.to().country());
-        assertThat(tourDto.to().latitude()).isEqualTo(30);
+        assertThat(tourDto.to().latitude()).isEqualTo(20);
         assertThat(tourDto.to().longitude()).isEqualTo(30);
         assertThat(tourDto.transportType()).isEqualTo(command.transportType());
-        assertThat(tourDto.distance()).isEqualTo(0);
-        assertThat(tourDto.estimatedTime()).isEqualTo(0);
-        assertThat(tourDto.imageUrl()).isEqualTo("/img");
+        assertThat(tourDto.distance()).isEqualTo(10);
+        assertThat(tourDto.estimatedTime()).isEqualTo(20);
     }
 
     @Test
@@ -219,10 +222,12 @@ public class TourServiceTest {
         when(tourRepository.existsTourByName(eq(command.name()))).thenReturn(false);
         when(geocodeSearchService.getCoordinates(
                 eq("new Radetzkystraße 10 1234 new Deutsch Wagram Germany")))
-                .thenReturn(new CoordinateDto(50, 50));
+                .thenReturn(new CoordinateDto(40, 50));
         when(geocodeSearchService.getCoordinates(
                 eq("new Billroth-Gasse 12 5678 new strasshof an der Nordbahn Austria")))
-                .thenReturn(new CoordinateDto(30, 30));
+                .thenReturn(new CoordinateDto(20, 30));
+        when(routeService.getRouteInformation(eq(40d), eq(50d), eq(20d), eq(30d)))
+                .thenReturn(new RouteInformationDto(10, 20));
         when(tourRepository.save(any(Tour.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
@@ -239,15 +244,20 @@ public class TourServiceTest {
         assertThat(tourDto.from().city()).isEqualTo(command.from().city());
         assertThat(tourDto.from().zipCode()).isEqualTo(command.from().zipCode());
         assertThat(tourDto.from().country()).isEqualTo(command.from().country());
+        assertThat(tourDto.from().latitude()).isEqualTo(40);
+        assertThat(tourDto.from().longitude()).isEqualTo(50);
         assertThat(tourDto.to().streetName()).isEqualTo(command.to().streetName());
         assertThat(tourDto.to().streetNumber()).isEqualTo(command.to().streetNumber());
         assertThat(tourDto.to().city()).isEqualTo(command.to().city());
         assertThat(tourDto.to().zipCode()).isEqualTo(command.to().zipCode());
         assertThat(tourDto.to().country()).isEqualTo(command.to().country());
+        assertThat(tourDto.to().latitude()).isEqualTo(20);
+        assertThat(tourDto.to().longitude()).isEqualTo(30);
         assertThat(tourDto.transportType()).isEqualTo(command.transportType());
         assertThat(tourDto.distance()).isEqualTo(tour.getDistance());
         assertThat(tourDto.estimatedTime()).isEqualTo(tour.getEstimatedTime());
-        assertThat(tourDto.imageUrl()).isEqualTo(tour.getImageUrl());
+        assertThat(tourDto.distance()).isEqualTo(10);
+        assertThat(tourDto.estimatedTime()).isEqualTo(20);
     }
 
     @Test
@@ -334,10 +344,12 @@ public class TourServiceTest {
         when(tourRepository.findTourById(eq(tour.getId()))).thenReturn(Optional.of(tour));
         when(geocodeSearchService.getCoordinates(
                 eq("new Radetzkystraße 10 1234 new Deutsch Wagram Germany")))
-                .thenReturn(new CoordinateDto(50, 50));
+                .thenReturn(new CoordinateDto(40, 50));
         when(geocodeSearchService.getCoordinates(
                 eq("new Billroth-Gasse 12 5678 new strasshof an der Nordbahn Austria")))
-                .thenReturn(new CoordinateDto(30, 30));
+                .thenReturn(new CoordinateDto(20, 30));
+        when(routeService.getRouteInformation(eq(40d), eq(50d), eq(20d), eq(30d)))
+                .thenReturn(new RouteInformationDto(10, 20));
         when(tourRepository.save(any(Tour.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 

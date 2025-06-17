@@ -3,6 +3,7 @@ package at.fhtw.tourplanner.application.service;
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
 import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
 import at.fhtw.tourplanner.application.service.dto.CoordinateDto;
+import at.fhtw.tourplanner.application.service.dto.RouteInformationDto;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.application.service.mappers.TourDtoMapper;
 import at.fhtw.tourplanner.domain.model.Address;
@@ -27,6 +28,7 @@ public class TourService {
     private final TourRepository tourRepository;
     private final TourDtoMapper tourDtoMapper;
     private final GeocodeSearchService geocodeSearchService;
+    private final RouteService routeService;
 
     public List<TourDto> getTours() {
         log.debug("Trying to get all tours");
@@ -72,6 +74,13 @@ public class TourService {
                         command.to().city(),
                         command.to().country()));
 
+        RouteInformationDto routeInformation = routeService.getRouteInformation(
+                fromCoordinates.latitude(),
+                fromCoordinates.longitude(),
+                toCoordinates.latitude(),
+                toCoordinates.longitude()
+        );
+
         Tour tour = Tour.builder()
                 .name(command.name())
                 .description(command.description())
@@ -94,9 +103,8 @@ public class TourService {
                         .longitude(toCoordinates.longitude())
                         .build())
                 .transportType(command.transportType())
-                .distance(0)
-                .estimatedTime(0)
-                .imageUrl("/img")
+                .distance(routeInformation.distance())
+                .estimatedTime(routeInformation.estimatedTime())
                 .build();
 
         tourRepository.save(tour);
@@ -145,6 +153,13 @@ public class TourService {
                         command.to().city(),
                         command.to().country()));
 
+        RouteInformationDto routeInformation = routeService.getRouteInformation(
+                fromCoordinates.latitude(),
+                fromCoordinates.longitude(),
+                toCoordinates.latitude(),
+                toCoordinates.longitude()
+        );
+
         tour.setName(command.name());
         tour.setDescription(command.description());
         tour.setFrom(Address.builder()
@@ -167,6 +182,8 @@ public class TourService {
                 .longitude(toCoordinates.longitude())
                 .build());
         tour.setTransportType(command.transportType());
+        tour.setDistance(routeInformation.distance());
+        tour.setEstimatedTime(routeInformation.estimatedTime());
 
         log.info("Successfully updated tour {}", tour);
         return tourDtoMapper.toDto(tourRepository.save(tour));

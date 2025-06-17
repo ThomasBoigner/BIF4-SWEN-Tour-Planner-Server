@@ -39,7 +39,6 @@ public class JpaTourRepository implements TourRepository {
             .transportType(TransportType.RUNNING)
             .distance(40)
             .estimatedTime(240)
-            .imageUrl("img")
             .build();
 
     private Tour tour3 = Tour.builder()
@@ -68,7 +67,6 @@ public class JpaTourRepository implements TourRepository {
             .transportType(TransportType.BIKE)
             .distance(30)
             .estimatedTime(60)
-            .imageUrl("img")
             .build();
 
     private final TourEntityRepository tourEntityRepository;

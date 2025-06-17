@@ -40,7 +40,6 @@ public class JpaTourLogRepository implements TourLogRepository {
             .transportType(TransportType.BIKE)
             .distance(20)
             .estimatedTime(120)
-            .imageUrl("img")
             .build();
 
     private TourLog tourlog1 = TourLog.builder()

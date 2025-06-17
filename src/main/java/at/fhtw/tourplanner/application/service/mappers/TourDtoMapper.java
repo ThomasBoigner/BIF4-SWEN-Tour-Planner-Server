@@ -22,7 +22,6 @@ public class TourDtoMapper extends AbstractDtoMapper<Tour, TourDto> {
                 .transportType(domainObject.getTransportType())
                 .distance(domainObject.getDistance())
                 .estimatedTime(domainObject.getEstimatedTime())
-                .imageUrl(domainObject.getImageUrl())
                 .build();
     }
 }
