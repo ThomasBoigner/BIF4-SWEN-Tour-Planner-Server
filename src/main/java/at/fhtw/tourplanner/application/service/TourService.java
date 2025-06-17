@@ -2,6 +2,7 @@ package at.fhtw.tourplanner.application.service;
 
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
 import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
+import at.fhtw.tourplanner.application.service.dto.CoordinateDto;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.application.service.mappers.TourDtoMapper;
 import at.fhtw.tourplanner.domain.model.Address;
@@ -25,6 +26,7 @@ import java.util.Optional;
 public class TourService {
     private final TourRepository tourRepository;
     private final TourDtoMapper tourDtoMapper;
+    private final GeocodeSearchService geocodeSearchService;
 
     public List<TourDto> getTours() {
         log.debug("Trying to get all tours");
@@ -54,6 +56,22 @@ public class TourService {
                     .formatted(command.name()));
         }
 
+        CoordinateDto fromCoordinates = geocodeSearchService
+                .getCoordinates(String.format("%s %s %s %s %s",
+                command.from().streetName(),
+                command.from().streetNumber(),
+                command.from().zipCode(),
+                command.from().city(),
+                command.from().country()));
+
+        CoordinateDto toCoordinates = geocodeSearchService
+                .getCoordinates(String.format("%s %s %s %s %s",
+                        command.to().streetName(),
+                        command.to().streetNumber(),
+                        command.to().zipCode(),
+                        command.to().city(),
+                        command.to().country()));
+
         Tour tour = Tour.builder()
                 .name(command.name())
                 .description(command.description())
@@ -63,8 +81,8 @@ public class TourService {
                         .city(command.from().city())
                         .zipCode(command.from().zipCode())
                         .country(command.from().country())
-                        .latitude(0)
-                        .longitude(0)
+                        .latitude(fromCoordinates.latitude())
+                        .longitude(fromCoordinates.longitude())
                         .build())
                 .to(Address.builder()
                         .streetName(command.to().streetName())
@@ -72,8 +90,8 @@ public class TourService {
                         .city(command.to().city())
                         .zipCode(command.to().zipCode())
                         .country(command.to().country())
-                        .latitude(0)
-                        .longitude(0)
+                        .latitude(toCoordinates.latitude())
+                        .longitude(toCoordinates.longitude())
                         .build())
                 .transportType(command.transportType())
                 .distance(0)
@@ -111,6 +129,22 @@ public class TourService {
                     .formatted(command.name()));
         }
 
+        CoordinateDto fromCoordinates = geocodeSearchService
+                .getCoordinates(String.format("%s %s %s %s %s",
+                        command.from().streetName(),
+                        command.from().streetNumber(),
+                        command.from().zipCode(),
+                        command.from().city(),
+                        command.from().country()));
+
+        CoordinateDto toCoordinates = geocodeSearchService
+                .getCoordinates(String.format("%s %s %s %s %s",
+                        command.to().streetName(),
+                        command.to().streetNumber(),
+                        command.to().zipCode(),
+                        command.to().city(),
+                        command.to().country()));
+
         tour.setName(command.name());
         tour.setDescription(command.description());
         tour.setFrom(Address.builder()
@@ -119,6 +153,8 @@ public class TourService {
                 .city(command.from().city())
                 .zipCode(command.from().zipCode())
                 .country(command.from().country())
+                .latitude(fromCoordinates.latitude())
+                .longitude(fromCoordinates.longitude())
                 .build()
         );
         tour.setTo(Address.builder()
@@ -127,6 +163,8 @@ public class TourService {
                 .city(command.to().city())
                 .zipCode(command.to().zipCode())
                 .country(command.to().country())
+                .latitude(toCoordinates.latitude())
+                .longitude(toCoordinates.longitude())
                 .build());
         tour.setTransportType(command.transportType());
 
