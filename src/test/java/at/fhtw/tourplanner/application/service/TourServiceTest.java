@@ -128,8 +128,12 @@ public class TourServiceTest {
                 .transportType(TransportType.BIKE)
                 .build();
         when(tourRepository.existsTourByName(eq(command.name()))).thenReturn(false);
-        when(geocodeSearchService.getCoordinates(eq("Radetzkystraße 2-6 2232 Deutsch Wagram Austria"))).thenReturn(new CoordinateDto(50, 50));
-        when(geocodeSearchService.getCoordinates(eq("Billroth-Gasse 5 2231 Strasshof an der Nordbahn Austria"))).thenReturn(new CoordinateDto(30, 30));
+        when(geocodeSearchService.getCoordinates(
+                eq("Radetzkystraße 2-6 2232 Deutsch Wagram Austria")))
+                .thenReturn(new CoordinateDto(50, 50));
+        when(geocodeSearchService.getCoordinates(
+                eq("Billroth-Gasse 5 2231 Strasshof an der Nordbahn Austria")))
+                .thenReturn(new CoordinateDto(30, 30));
         when(tourRepository.save(any(Tour.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
@@ -213,8 +217,12 @@ public class TourServiceTest {
                 .build();
         when(tourRepository.findTourById(eq(tour.getId()))).thenReturn(Optional.of(tour));
         when(tourRepository.existsTourByName(eq(command.name()))).thenReturn(false);
-        when(geocodeSearchService.getCoordinates(eq("new Radetzkystraße 10 1234 new Deutsch Wagram Germany"))).thenReturn(new CoordinateDto(50, 50));
-        when(geocodeSearchService.getCoordinates(eq("new Billroth-Gasse 12 5678 new strasshof an der Nordbahn Austria"))).thenReturn(new CoordinateDto(30, 30));
+        when(geocodeSearchService.getCoordinates(
+                eq("new Radetzkystraße 10 1234 new Deutsch Wagram Germany")))
+                .thenReturn(new CoordinateDto(50, 50));
+        when(geocodeSearchService.getCoordinates(
+                eq("new Billroth-Gasse 12 5678 new strasshof an der Nordbahn Austria")))
+                .thenReturn(new CoordinateDto(30, 30));
         when(tourRepository.save(any(Tour.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
@@ -324,8 +332,12 @@ public class TourServiceTest {
                 .transportType(TransportType.BIKE)
                 .build();
         when(tourRepository.findTourById(eq(tour.getId()))).thenReturn(Optional.of(tour));
-        when(geocodeSearchService.getCoordinates(eq("new Radetzkystraße 10 1234 new Deutsch Wagram Germany"))).thenReturn(new CoordinateDto(50, 50));
-        when(geocodeSearchService.getCoordinates(eq("new Billroth-Gasse 12 5678 new strasshof an der Nordbahn Austria"))).thenReturn(new CoordinateDto(30, 30));
+        when(geocodeSearchService.getCoordinates(
+                eq("new Radetzkystraße 10 1234 new Deutsch Wagram Germany")))
+                .thenReturn(new CoordinateDto(50, 50));
+        when(geocodeSearchService.getCoordinates(
+                eq("new Billroth-Gasse 12 5678 new strasshof an der Nordbahn Austria")))
+                .thenReturn(new CoordinateDto(30, 30));
         when(tourRepository.save(any(Tour.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 

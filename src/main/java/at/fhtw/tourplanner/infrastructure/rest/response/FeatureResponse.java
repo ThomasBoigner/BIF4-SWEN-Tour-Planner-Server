@@ -1,4 +1,4 @@
-package at.fhtw.tourplanner.infrastructure.persistence.jpa.rest.response;
+package at.fhtw.tourplanner.infrastructure.rest.response;
 
 import lombok.Builder;
 

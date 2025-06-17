@@ -1,10 +1,9 @@
-package at.fhtw.tourplanner.infrastructure.persistence.jpa.rest;
+package at.fhtw.tourplanner.infrastructure.rest;
 
 import at.fhtw.tourplanner.application.service.GeocodeSearchService;
 import at.fhtw.tourplanner.application.service.dto.CoordinateDto;
-import at.fhtw.tourplanner.infrastructure.persistence.jpa.rest.response.GeocodeResponse;
+import at.fhtw.tourplanner.infrastructure.rest.response.GeocodeResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -25,7 +24,8 @@ public class OpenRouteServiceGeocodeSearchService implements GeocodeSearchServic
 
         GeocodeResponse response = this.restClient.get().uri(uriBuilder -> uriBuilder
                         .path("geocode/search")
-                        .queryParam("api_key", "")
+                        .queryParam("api_key",
+                                "5b3ce3597851110001cf624889f50efba32047fbae372fe1bdf0f950")
                         .queryParam("text", address)
                         .queryParam("size", 1)
                         .build())
