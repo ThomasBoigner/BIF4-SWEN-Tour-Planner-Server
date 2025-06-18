@@ -43,7 +43,12 @@ public class TourServiceTest {
     @BeforeEach
     void setUp() {
         tourDtoMapper = new TourDtoMapper(new AddressDtoMapper());
-        tourService = new TourService(tourRepository, tourDtoMapper, geocodeSearchService, routeService);
+        tourService = new TourService(
+                tourRepository,
+                tourDtoMapper,
+                geocodeSearchService,
+                routeService
+        );
 
         tour = Tour.builder()
                 .name("Tour 1")
@@ -136,7 +141,8 @@ public class TourServiceTest {
         when(geocodeSearchService.getCoordinates(
                 eq("Billroth-Gasse 5 2231 Strasshof an der Nordbahn Austria")))
                 .thenReturn(new CoordinateDto(20, 30));
-        when(routeService.getRouteInformation(eq(40d), eq(50d), eq(20d), eq(30d)))
+        when(routeService.getRouteInformation(
+                eq(40d), eq(50d), eq(20d), eq(30d), eq(command.transportType())))
                 .thenReturn(new RouteInformationDto(10, 20));
         when(tourRepository.save(any(Tour.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
@@ -226,7 +232,8 @@ public class TourServiceTest {
         when(geocodeSearchService.getCoordinates(
                 eq("new Billroth-Gasse 12 5678 new strasshof an der Nordbahn Austria")))
                 .thenReturn(new CoordinateDto(20, 30));
-        when(routeService.getRouteInformation(eq(40d), eq(50d), eq(20d), eq(30d)))
+        when(routeService.getRouteInformation(
+                eq(40d), eq(50d), eq(20d), eq(30d), eq(command.transportType())))
                 .thenReturn(new RouteInformationDto(10, 20));
         when(tourRepository.save(any(Tour.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
@@ -348,7 +355,8 @@ public class TourServiceTest {
         when(geocodeSearchService.getCoordinates(
                 eq("new Billroth-Gasse 12 5678 new strasshof an der Nordbahn Austria")))
                 .thenReturn(new CoordinateDto(20, 30));
-        when(routeService.getRouteInformation(eq(40d), eq(50d), eq(20d), eq(30d)))
+        when(routeService.getRouteInformation(
+                eq(40d), eq(50d), eq(20d), eq(30d), eq(command.transportType())))
                 .thenReturn(new RouteInformationDto(10, 20));
         when(tourRepository.save(any(Tour.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);

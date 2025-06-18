@@ -2,6 +2,7 @@ package at.fhtw.tourplanner.infrastructure.rest;
 
 import at.fhtw.tourplanner.application.service.RouteService;
 import at.fhtw.tourplanner.application.service.dto.RouteInformationDto;
+import at.fhtw.tourplanner.domain.model.TransportType;
 import at.fhtw.tourplanner.infrastructure.rest.response.RouteInformationResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,20 +24,29 @@ public class OpenRouteServiceRouteService implements RouteService {
             double fromLatitude,
             double formLongitude,
             double toLatitude,
-            double toLongitude
+            double toLongitude,
+            TransportType transportType
     ) {
         log.debug(
                 "Trying to get route information for from latitude {} and longitude {} and " +
-                        "to latitude {} and longitude {}",
+                        "to latitude {} and longitude {} and transport type {}",
                 fromLatitude,
                 formLongitude,
                 toLatitude,
-                toLongitude
+                toLongitude,
+                transportType
         );
+
+        String profile = switch (transportType) {
+            case TransportType.BIKE -> "cycling-regular";
+            case TransportType.RUNNING -> "foot-walking";
+            case TransportType.HIKE -> "foot-hiking";
+            case TransportType.VACATION -> "driving-car";
+        };
 
         RouteInformationResponse response = this.restClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("v2/directions/driving-car")
+                        .path(String.format("v2/directions/%s", profile))
                         .queryParam("api_key",
                                 "5b3ce3597851110001cf624889f50efba32047fbae372fe1bdf0f950")
                         .queryParam("start", String.format("%s, %s", formLongitude, fromLatitude))

@@ -1,6 +1,7 @@
 package at.fhtw.tourplanner.infrastructure.rest;
 
 import at.fhtw.tourplanner.application.service.dto.RouteInformationDto;
+import at.fhtw.tourplanner.domain.model.TransportType;
 import at.fhtw.tourplanner.infrastructure.rest.response.PropertiesResponse;
 import at.fhtw.tourplanner.infrastructure.rest.response.RouteInformationFeatureResponse;
 import at.fhtw.tourplanner.infrastructure.rest.response.RouteInformationResponse;
@@ -56,10 +57,23 @@ public class OpenRouteServiceRouteServiceTest {
                 ))
                 .build();
 
-        this.server.expect(requestTo("https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf624889f50efba32047fbae372fe1bdf0f950&start=20.0,%2010.0&end=40.0,%2030.0")).andRespond(withSuccess(objectMapper.writeValueAsString(routeInformationResponse), MediaType.APPLICATION_JSON));
+        this.server.expect(requestTo(
+                "https://api.openrouteservice.org/v2/directions/driving-car" +
+                        "?api_key=5b3ce3597851110001cf624889f50efba32047fbae372fe1bdf0f950" +
+                        "&start=20.0,%2010.0&end=40.0,%2030.0"))
+                .andRespond(withSuccess(
+                            objectMapper.writeValueAsString(routeInformationResponse),
+                            MediaType.APPLICATION_JSON));
 
         // When
-        RouteInformationDto result = openRouteServiceRouteService.getRouteInformation(fromLatitude, fromLongitude, toLatitude, toLongitude);
+        RouteInformationDto result = openRouteServiceRouteService
+                .getRouteInformation(
+                        fromLatitude,
+                        fromLongitude,
+                        toLatitude,
+                        toLongitude,
+                        TransportType.VACATION
+                );
 
         // Then
         assertThat(result.distance()).isEqualTo(10);
@@ -74,22 +88,20 @@ public class OpenRouteServiceRouteServiceTest {
         double toLatitude = 30;
         double toLongitude = 40;
 
-        RouteInformationResponse routeInformationResponse = RouteInformationResponse.builder()
-                .features(List.of(
-                        RouteInformationFeatureResponse.builder()
-                                .properties(PropertiesResponse.builder()
-                                        .summary(SummaryResponse.builder()
-                                                .distance(10)
-                                                .duration(20)
-                                                .build())
-                                        .build())
-                                .build()
-                ))
-                .build();
-
-        this.server.expect(requestTo("https://api.openrouteservice.org/v2/directions/driving-car?api_key=5b3ce3597851110001cf624889f50efba32047fbae372fe1bdf0f950&start=20.0,%2010.0&end=40.0,%2030.0")).andRespond(withSuccess("", MediaType.APPLICATION_JSON));
+        this.server.expect(requestTo(
+                "https://api.openrouteservice.org/v2/directions/driving-car" +
+                        "?api_key=5b3ce3597851110001cf624889f50efba32047fbae372fe1bdf0f950" +
+                        "&start=20.0,%2010.0&end=40.0,%2030.0"))
+                .andRespond(withSuccess("", MediaType.APPLICATION_JSON));
 
         // When
-        assertThrows(IllegalArgumentException.class, () -> openRouteServiceRouteService.getRouteInformation(fromLatitude, fromLongitude, toLatitude, toLongitude));
+        assertThrows(IllegalArgumentException.class, () -> openRouteServiceRouteService
+                .getRouteInformation(
+                        fromLatitude,
+                        fromLongitude,
+                        toLatitude,
+                        toLongitude,
+                        TransportType.VACATION
+                ));
     }
 }

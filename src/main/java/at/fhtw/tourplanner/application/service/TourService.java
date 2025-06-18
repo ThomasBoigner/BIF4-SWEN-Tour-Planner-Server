@@ -6,10 +6,7 @@ import at.fhtw.tourplanner.application.service.dto.CoordinateDto;
 import at.fhtw.tourplanner.application.service.dto.RouteInformationDto;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.application.service.mappers.TourDtoMapper;
-import at.fhtw.tourplanner.domain.model.Address;
-import at.fhtw.tourplanner.domain.model.Tour;
-import at.fhtw.tourplanner.domain.model.TourId;
-import at.fhtw.tourplanner.domain.model.TourRepository;
+import at.fhtw.tourplanner.domain.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -78,7 +75,8 @@ public class TourService {
                 fromCoordinates.latitude(),
                 fromCoordinates.longitude(),
                 toCoordinates.latitude(),
-                toCoordinates.longitude()
+                toCoordinates.longitude(),
+                command.transportType()
         );
 
         Tour tour = Tour.builder()
@@ -157,7 +155,8 @@ public class TourService {
                 fromCoordinates.latitude(),
                 fromCoordinates.longitude(),
                 toCoordinates.latitude(),
-                toCoordinates.longitude()
+                toCoordinates.longitude(),
+                command.transportType()
         );
 
         tour.setName(command.name());
