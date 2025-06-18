@@ -63,10 +63,9 @@ public class OpenRouteServiceGeocodeSearchServiceTest {
     }
 
     @Test
-    void ensureGetCoordinatesThrowsErrorIfAddressCanNotBeFound() throws JsonProcessingException {
+    void ensureGetCoordinatesThrowsErrorIfAddressCanNotBeFound() {
         // Given
         String address = "Address";
-
 
         this.server.expect(
                         requestTo("https://api.openrouteservice.org/geocode/search?api_key=" +

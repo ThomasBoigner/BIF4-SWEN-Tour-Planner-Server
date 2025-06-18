@@ -2,7 +2,6 @@ package at.fhtw.tourplanner.infrastructure.rest;
 
 import at.fhtw.tourplanner.application.service.RouteService;
 import at.fhtw.tourplanner.application.service.dto.RouteInformationDto;
-import at.fhtw.tourplanner.infrastructure.rest.response.GeocodeSearchResponse;
 import at.fhtw.tourplanner.infrastructure.rest.response.RouteInformationResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -52,7 +51,7 @@ public class OpenRouteServiceRouteService implements RouteService {
 
         RouteInformationDto routeInformationDto = RouteInformationDto.builder()
                 .distance(response.features().getFirst().properties().summary().distance())
-                .estimatedTime(response.features().getFirst().properties().summary().distance())
+                .estimatedTime(response.features().getFirst().properties().summary().duration())
                 .build();
 
         log.debug("Retrieved route information: {}", routeInformationDto);
