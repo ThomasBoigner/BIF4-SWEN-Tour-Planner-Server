@@ -5,5 +5,4 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record GeocodeResponse(List<FeatureResponse> features) {
-}
+public record RouteInformationResponse(List<RouteInformationFeatureResponse> features) { }

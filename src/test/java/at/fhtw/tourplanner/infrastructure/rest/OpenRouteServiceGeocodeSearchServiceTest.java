@@ -1,8 +1,8 @@
 package at.fhtw.tourplanner.infrastructure.rest;
 
 import at.fhtw.tourplanner.application.service.dto.CoordinateDto;
-import at.fhtw.tourplanner.infrastructure.rest.response.FeatureResponse;
-import at.fhtw.tourplanner.infrastructure.rest.response.GeocodeResponse;
+import at.fhtw.tourplanner.infrastructure.rest.response.GeocodeFeatureResponse;
+import at.fhtw.tourplanner.infrastructure.rest.response.GeocodeSearchResponse;
 import at.fhtw.tourplanner.infrastructure.rest.response.GeometryResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,8 +38,8 @@ public class OpenRouteServiceGeocodeSearchServiceTest {
     void ensureGetCoordinatesWorksProperly() throws JsonProcessingException {
         // Given
         String address = "Address";
-        GeocodeResponse geocodeResponse = GeocodeResponse.builder()
-                .features(List.of(FeatureResponse.builder()
+        GeocodeSearchResponse geocodeResponse = GeocodeSearchResponse.builder()
+                .features(List.of(GeocodeFeatureResponse.builder()
                                 .geometry(GeometryResponse.builder()
                                         .coordinates(List.of(20d, 10d))
                                         .build())

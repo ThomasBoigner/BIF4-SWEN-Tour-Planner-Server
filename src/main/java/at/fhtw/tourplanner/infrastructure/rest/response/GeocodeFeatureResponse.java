@@ -3,4 +3,4 @@ package at.fhtw.tourplanner.infrastructure.rest.response;
 import lombok.Builder;
 
 @Builder
-public record FeatureResponse(GeometryResponse geometry) { }
+public record GeocodeFeatureResponse(GeometryResponse geometry) { }
