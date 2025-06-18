@@ -13,5 +13,4 @@ public record TourDto(UUID id,
                       AddressDto to,
                       TransportType transportType,
                       double distance,
-                      double estimatedTime,
-                      String imageUrl) { }
+                      double estimatedTime) { }

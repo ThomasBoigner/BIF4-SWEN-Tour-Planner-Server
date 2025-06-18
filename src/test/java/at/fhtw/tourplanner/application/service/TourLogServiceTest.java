@@ -55,7 +55,6 @@ public class TourLogServiceTest {
                 .transportType(TransportType.BIKE)
                 .distance(20)
                 .estimatedTime(120)
-                .imageUrl("img")
                 .build();
 
         tourLog = TourLog.builder()

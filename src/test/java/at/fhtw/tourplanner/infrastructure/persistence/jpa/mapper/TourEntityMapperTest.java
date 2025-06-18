@@ -46,7 +46,6 @@ public class TourEntityMapperTest {
                 .transportType(TransportType.BIKE)
                 .distance(20)
                 .estimatedTime(120)
-                .imageUrl("img")
                 .build();
 
         // When
@@ -71,7 +70,6 @@ public class TourEntityMapperTest {
         assertThat(tour.getTransportType()).isEqualTo(tourEntity.getTransportType());
         assertThat(tour.getDistance()).isEqualTo(tourEntity.getDistance());
         assertThat(tour.getEstimatedTime()).isEqualTo(tourEntity.getEstimatedTime());
-        assertThat(tour.getImageUrl()).isEqualTo(tourEntity.getImageUrl());
     }
 
     @Test
@@ -99,7 +97,6 @@ public class TourEntityMapperTest {
                 .transportType(TransportType.BIKE)
                 .distance(20)
                 .estimatedTime(120)
-                .imageUrl("img")
                 .build();
 
         // When
@@ -124,6 +121,5 @@ public class TourEntityMapperTest {
         assertThat(tour.getTransportType()).isEqualTo(tourEntity.getTransportType());
         assertThat(tour.getDistance()).isEqualTo(tourEntity.getDistance());
         assertThat(tour.getEstimatedTime()).isEqualTo(tourEntity.getEstimatedTime());
-        assertThat(tour.getImageUrl()).isEqualTo(tourEntity.getImageUrl());
     }
 }

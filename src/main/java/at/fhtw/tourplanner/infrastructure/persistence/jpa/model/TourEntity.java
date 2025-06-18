@@ -51,5 +51,4 @@ public class TourEntity {
     private TransportType transportType;
     private double distance;
     private double estimatedTime;
-    private String imageUrl;
 }

@@ -72,7 +72,6 @@ public class TourRestControllerTest {
                 .transportType(TransportType.BIKE)
                 .distance(20)
                 .estimatedTime(120)
-                .imageUrl("img")
                 .build();
 
         tourDto = tourDtoMapper.toDto(tour);

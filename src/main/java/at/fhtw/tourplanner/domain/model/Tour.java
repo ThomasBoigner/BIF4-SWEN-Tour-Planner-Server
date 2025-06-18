@@ -23,7 +23,6 @@ public class Tour {
     private TransportType transportType;
     private double distance;
     private double estimatedTime;
-    private String imageUrl;
 
     @Builder
     public Tour(String name,
@@ -32,20 +31,15 @@ public class Tour {
                 Address to,
                 TransportType transportType,
                 double distance,
-                double estimatedTime,
-                String imageUrl) {
+                double estimatedTime) {
         this.id = new TourId();
         setName(name);
         setDescription(description);
         setFrom(from);
         setTo(to);
         setTransportType(transportType);
-        this.distance = when(distance, "distance").isPositive().thenAssign();
-        this.estimatedTime = when(estimatedTime, "estimated time").isPositive().thenAssign();
-        this.imageUrl = when(imageUrl)
-                .isNotNull().and()
-                .isNotEmpty().and()
-                .isNotBlank().thenAssign();
+        setDistance(distance);
+        setEstimatedTime(estimatedTime);
 
         log.debug("Created tour {}", this);
     }
@@ -89,5 +83,13 @@ public class Tour {
     public void setTransportType(TransportType transportType) {
         Objects.requireNonNull(transportType, "transport type must not be null");
         this.transportType = transportType;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = when(distance, "distance").isPositive().thenAssign();
+    }
+
+    public void setEstimatedTime(double estimatedTime) {
+        this.estimatedTime = when(estimatedTime, "estimated time").isPositive().thenAssign();
     }
 }

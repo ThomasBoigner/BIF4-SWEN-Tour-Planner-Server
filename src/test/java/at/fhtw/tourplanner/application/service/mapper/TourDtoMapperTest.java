@@ -48,7 +48,6 @@ public class TourDtoMapperTest {
                 .transportType(TransportType.BIKE)
                 .distance(20)
                 .estimatedTime(120)
-                .imageUrl("img")
                 .build();
 
         // When
@@ -76,6 +75,5 @@ public class TourDtoMapperTest {
         assertThat(tour.getTo().longitude()).isEqualTo(tourDto.to().longitude());
         assertThat(tour.getDistance()).isEqualTo(tourDto.distance());
         assertThat(tour.getEstimatedTime()).isEqualTo(tourDto.estimatedTime());
-        assertThat(tour.getImageUrl()).isEqualTo(tourDto.imageUrl());
     }
 }

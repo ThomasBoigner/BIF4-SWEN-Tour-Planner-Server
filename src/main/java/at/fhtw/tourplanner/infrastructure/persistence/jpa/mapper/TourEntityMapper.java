@@ -22,8 +22,7 @@ public class TourEntityMapper extends AbstractEntityMapper<Tour, TourEntity> {
                 addressEmbeddableMapper.toDomainObject(entity.getTo()),
                 entity.getTransportType(),
                 entity.getDistance(),
-                entity.getEstimatedTime(),
-                entity.getImageUrl()
+                entity.getEstimatedTime()
         );
     }
 
@@ -38,7 +37,6 @@ public class TourEntityMapper extends AbstractEntityMapper<Tour, TourEntity> {
                 .transportType(domainObject.getTransportType())
                 .distance(domainObject.getDistance())
                 .estimatedTime(domainObject.getEstimatedTime())
-                .imageUrl(domainObject.getImageUrl())
                 .build();
     }
 }
