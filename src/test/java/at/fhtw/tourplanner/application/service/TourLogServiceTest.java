@@ -31,7 +31,7 @@ public class TourLogServiceTest {
     @BeforeEach
     void setUp() {
         tourLogDtoMapper = new TourLogDtoMapper(new DurationDtoMapper());
-        tourLogService = new TourLogService(tourLogRepository, tourRepository, tourLogDtoMapper);
+        tourLogService = new TourLogServiceImpl(tourLogRepository, tourRepository, tourLogDtoMapper);
 
         tour = Tour.builder()
                 .name("Tour 1")

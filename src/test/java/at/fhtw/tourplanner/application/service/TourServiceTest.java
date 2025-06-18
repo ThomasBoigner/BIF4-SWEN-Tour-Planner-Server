@@ -43,7 +43,7 @@ public class TourServiceTest {
     @BeforeEach
     void setUp() {
         tourDtoMapper = new TourDtoMapper(new AddressDtoMapper());
-        tourService = new TourService(
+        tourService = new TourServiceImpl(
                 tourRepository,
                 tourDtoMapper,
                 geocodeSearchService,
