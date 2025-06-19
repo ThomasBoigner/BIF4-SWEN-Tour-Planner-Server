@@ -81,17 +81,17 @@ public class TourRestControllerTest {
     @Test
     void ensureGetToursWorksProperly() throws Exception {
         // Given
-        when(tourService.getTours(eq(0), eq(5))).thenReturn(
-                Page.<TourDto>builder()
+        Page<TourDto> page = Page.<TourDto>builder()
                         .content(List.of(tourDto))
-                .build());
+                        .build();
+        when(tourService.getTours(eq(0), eq(5))).thenReturn(page);
 
         // Perform
         mockMvc.perform(get("/api/tour").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(tourDto))));
+                .andExpect(content().json(objectMapper.writeValueAsString(page)));
     }
 
     @Test

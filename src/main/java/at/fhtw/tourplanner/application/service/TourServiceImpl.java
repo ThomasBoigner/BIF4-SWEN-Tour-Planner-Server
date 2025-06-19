@@ -13,11 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 
@@ -33,20 +30,9 @@ public class TourServiceImpl implements TourService {
     @Override
     public Page<TourDto> getTours(int page, int size) {
         log.debug("Trying to get all tours on page {} with size {}", page, size);
-        Page<Tour> tours = tourRepository.findAll(page, size, "name");
-        Page<TourDto> dtos = Page.<TourDto>builder()
-                .content(tourDtoMapper.toDtos(tours.getContent()))
-                .last(tours.isLast())
-                .totalPages(tours.getTotalPages())
-                .totalElements(tours.getTotalElements())
-                .first(tours.isFirst())
-                .size(tours.getSize())
-                .number(tours.getNumber())
-                .numberOfElements(tours.getNumberOfElements())
-                .empty(tours.isEmpty())
-                .build();
-        log.info("Retrieved {} tours of all tours", dtos.getContent().size());
-        return dtos;
+        Page<TourDto> tours = tourDtoMapper.toDtoPage(tourRepository.findAll(page, size, "name"));
+        log.info("Retrieved {} tours of all tours", tours.getContent().size());
+        return tours;
     }
 
     @Override
@@ -57,22 +43,11 @@ public class TourServiceImpl implements TourService {
                 page,
                 size
         );
-        Page<Tour> tours = tourRepository
-                .findAllByNameLike(name, page, size, "name");
+        Page<TourDto> tours = tourDtoMapper.toDtoPage(tourRepository
+                .findAllByNameLike(name, page, size, "name"));
 
-        Page<TourDto> dtos = Page.<TourDto>builder()
-                .content(tourDtoMapper.toDtos(tours.getContent()))
-                .last(tours.isLast())
-                .totalPages(tours.getTotalPages())
-                .totalElements(tours.getTotalElements())
-                .first(tours.isFirst())
-                .size(tours.getSize())
-                .number(tours.getNumber())
-                .numberOfElements(tours.getNumberOfElements())
-                .empty(tours.isEmpty())
-                .build();
         log.info("Retrieved {} tours with name like {}", tours.getContent().size(), name);
-        return dtos;
+        return tours;
 
     }
 

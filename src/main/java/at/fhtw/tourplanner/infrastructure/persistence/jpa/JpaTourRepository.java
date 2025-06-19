@@ -88,44 +88,20 @@ public class JpaTourRepository implements TourRepository {
 
     @Override
     public Page<Tour> findAll(int page, int size, String sortBy) {
-        org.springframework.data.domain.Page<TourEntity> result = tourEntityRepository
-                .findAll(PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortBy))));
-
-        return Page.<Tour>builder()
-                .content(tourEntityMapper.toDomainObjects(result.getContent()))
-                .last(result.isLast())
-                .totalPages(result.getTotalPages())
-                .totalElements(result.getTotalElements())
-                .first(result.isFirst())
-                .size(result.getSize())
-                .number(result.getNumber())
-                .numberOfElements(result.getNumberOfElements())
-                .empty(result.isEmpty())
-                .build();
+        return tourEntityMapper.toDomainPage(tourEntityRepository
+                .findAll(PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortBy)))));
     }
 
     @Override
     public Page<Tour> findAllByNameLike(String name, int page, int size, String sortBy) {
-        org.springframework.data.domain.Page<TourEntity> result = tourEntityRepository
+        return tourEntityMapper.toDomainPage(tourEntityRepository
                 .findAllByNameLike(
                         "%%%s%%".formatted(name),
                         PageRequest.of(
                                 page,
                                 size,
                                 Sort.by(Sort.Order.asc(sortBy)
-                        )));
-
-        return Page.<Tour>builder()
-                .content(tourEntityMapper.toDomainObjects(result.getContent()))
-                .last(result.isLast())
-                .totalPages(result.getTotalPages())
-                .totalElements(result.getTotalElements())
-                .first(result.isFirst())
-                .size(result.getSize())
-                .number(result.getNumber())
-                .numberOfElements(result.getNumberOfElements())
-                .empty(result.isEmpty())
-                .build();
+                        ))));
     }
 
     @Override
