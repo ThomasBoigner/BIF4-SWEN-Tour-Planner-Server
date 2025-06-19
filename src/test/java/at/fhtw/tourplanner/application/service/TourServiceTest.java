@@ -12,6 +12,7 @@ import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
 import at.fhtw.tourplanner.domain.model.TourRepository;
 import at.fhtw.tourplanner.domain.model.TransportType;
+import at.fhtw.tourplanner.domain.util.Page;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -78,13 +79,16 @@ public class TourServiceTest {
     @Test
     void ensureGetToursWorksProperly() {
         // Given
-        when(tourRepository.findAll(eq(0), eq(5), eq("name"))).thenReturn(List.of(tour));
+        when(tourRepository.findAll(eq(0), eq(5), eq("name"))).thenReturn(
+                Page.<Tour>builder()
+                        .content(List.of(tour))
+                        .build());
 
         // When
-        List<TourDto> tours = tourService.getTours(0, 5);
+        Page<TourDto> tours = tourService.getTours(0, 5);
 
         // Then
-        assertThat(tours).contains(tourDtoMapper.toDto(tour));
+        assertThat(tours.getContent()).contains(tourDtoMapper.toDto(tour));
     }
 
     @Test

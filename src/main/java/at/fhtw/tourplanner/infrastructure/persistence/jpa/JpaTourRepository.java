@@ -1,14 +1,15 @@
 package at.fhtw.tourplanner.infrastructure.persistence.jpa;
 
 import at.fhtw.tourplanner.domain.model.*;
+import at.fhtw.tourplanner.domain.util.Page;
 import at.fhtw.tourplanner.infrastructure.persistence.jpa.mapper.TourEntityMapper;
+import at.fhtw.tourplanner.infrastructure.persistence.jpa.model.TourEntity;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -86,17 +87,45 @@ public class JpaTourRepository implements TourRepository {
     }
 
     @Override
-    public List<Tour> findAll(int page, int size, String sortBy) {
-        return tourEntityMapper.toDomainObjects(tourEntityRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortBy)))).getContent());
+    public Page<Tour> findAll(int page, int size, String sortBy) {
+        org.springframework.data.domain.Page<TourEntity> result = tourEntityRepository
+                .findAll(PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortBy))));
+
+        return Page.<Tour>builder()
+                .content(tourEntityMapper.toDomainObjects(result.getContent()))
+                .last(result.isLast())
+                .totalPages(result.getTotalPages())
+                .totalElements(result.getTotalElements())
+                .first(result.isFirst())
+                .size(result.getSize())
+                .number(result.getNumber())
+                .numberOfElements(result.getNumberOfElements())
+                .empty(result.isEmpty())
+                .build();
     }
 
     @Override
-    public List<Tour> findAllByNameLike(String name, int page, int size, String sortBy) {
-        return tourEntityMapper.toDomainObjects(tourEntityRepository
+    public Page<Tour> findAllByNameLike(String name, int page, int size, String sortBy) {
+        org.springframework.data.domain.Page<TourEntity> result = tourEntityRepository
                 .findAllByNameLike(
                         "%%%s%%".formatted(name),
-                        PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortBy)))
-                ).getContent());
+                        PageRequest.of(
+                                page,
+                                size,
+                                Sort.by(Sort.Order.asc(sortBy)
+                        )));
+
+        return Page.<Tour>builder()
+                .content(tourEntityMapper.toDomainObjects(result.getContent()))
+                .last(result.isLast())
+                .totalPages(result.getTotalPages())
+                .totalElements(result.getTotalElements())
+                .first(result.isFirst())
+                .size(result.getSize())
+                .number(result.getNumber())
+                .numberOfElements(result.getNumberOfElements())
+                .empty(result.isEmpty())
+                .build();
     }
 
     @Override

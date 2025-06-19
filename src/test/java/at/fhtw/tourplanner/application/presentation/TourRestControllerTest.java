@@ -10,6 +10,7 @@ import at.fhtw.tourplanner.application.service.mappers.TourDtoMapper;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
 import at.fhtw.tourplanner.domain.model.TransportType;
+import at.fhtw.tourplanner.domain.util.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,7 +81,10 @@ public class TourRestControllerTest {
     @Test
     void ensureGetToursWorksProperly() throws Exception {
         // Given
-        when(tourService.getTours(eq(0), eq(5))).thenReturn(List.of(tourDto));
+        when(tourService.getTours(eq(0), eq(5))).thenReturn(
+                Page.<TourDto>builder()
+                        .content(List.of(tourDto))
+                .build());
 
         // Perform
         mockMvc.perform(get("/api/tour").accept(MediaType.APPLICATION_JSON))
@@ -93,7 +97,8 @@ public class TourRestControllerTest {
     @Test
     void ensureGetToursReturnsNoContentWhenListIsEmpty() throws Exception {
         // Given
-        when(tourService.getTours(eq(0), eq(5))).thenReturn(List.of());
+        when(tourService.getTours(eq(0), eq(5)))
+                .thenReturn(Page.<TourDto>builder().empty(true).build());
 
         // Perform
         mockMvc.perform(get("/api/tour").accept(MediaType.APPLICATION_JSON))

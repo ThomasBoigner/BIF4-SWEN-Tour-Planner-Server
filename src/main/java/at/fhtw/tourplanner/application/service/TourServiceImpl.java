@@ -7,6 +7,7 @@ import at.fhtw.tourplanner.application.service.dto.RouteInformationDto;
 import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.application.service.mappers.TourDtoMapper;
 import at.fhtw.tourplanner.domain.model.*;
+import at.fhtw.tourplanner.domain.util.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 
@@ -28,28 +31,48 @@ public class TourServiceImpl implements TourService {
     private final RouteService routeService;
 
     @Override
-    public List<TourDto> getTours(int page, int size) {
+    public Page<TourDto> getTours(int page, int size) {
         log.debug("Trying to get all tours on page {} with size {}", page, size);
-        List<TourDto> tours = tourRepository.findAll(page, size, "name").stream().map(tourDtoMapper::toDto).toList();
-        log.info("Retrieved {} tours of all tours", tours.size());
-        return tours;
+        Page<Tour> tours = tourRepository.findAll(page, size, "name");
+        Page<TourDto> dtos = Page.<TourDto>builder()
+                .content(tourDtoMapper.toDtos(tours.getContent()))
+                .last(tours.isLast())
+                .totalPages(tours.getTotalPages())
+                .totalElements(tours.getTotalElements())
+                .first(tours.isFirst())
+                .size(tours.getSize())
+                .number(tours.getNumber())
+                .numberOfElements(tours.getNumberOfElements())
+                .empty(tours.isEmpty())
+                .build();
+        log.info("Retrieved {} tours of all tours", dtos.getContent().size());
+        return dtos;
     }
 
     @Override
-    public List<TourDto> findToursByName(String name, int page, int size) {
+    public Page<TourDto> findToursByName(String name, int page, int size) {
         log.debug(
                 "Trying to get all tours with name like {} on page {} with size {}",
                 name,
                 page,
                 size
         );
-        List<TourDto> tours = tourRepository
-                .findAllByNameLike(name, page, size, "name")
-                .stream()
-                .map(tourDtoMapper::toDto)
-                .toList();
-        log.info("Retrieved {} tours with name like {}", tours.size(), name);
-        return tours;
+        Page<Tour> tours = tourRepository
+                .findAllByNameLike(name, page, size, "name");
+
+        Page<TourDto> dtos = Page.<TourDto>builder()
+                .content(tourDtoMapper.toDtos(tours.getContent()))
+                .last(tours.isLast())
+                .totalPages(tours.getTotalPages())
+                .totalElements(tours.getTotalElements())
+                .first(tours.isFirst())
+                .size(tours.getSize())
+                .number(tours.getNumber())
+                .numberOfElements(tours.getNumberOfElements())
+                .empty(tours.isEmpty())
+                .build();
+        log.info("Retrieved {} tours with name like {}", tours.getContent().size(), name);
+        return dtos;
 
     }
 
