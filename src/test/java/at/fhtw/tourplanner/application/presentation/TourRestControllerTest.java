@@ -80,7 +80,7 @@ public class TourRestControllerTest {
     @Test
     void ensureGetToursWorksProperly() throws Exception {
         // Given
-        when(tourService.getTours()).thenReturn(List.of(tourDto));
+        when(tourService.getTours(eq(0), eq(5))).thenReturn(List.of(tourDto));
 
         // Perform
         mockMvc.perform(get("/api/tour").accept(MediaType.APPLICATION_JSON))
@@ -93,7 +93,7 @@ public class TourRestControllerTest {
     @Test
     void ensureGetToursReturnsNoContentWhenListIsEmpty() throws Exception {
         // Given
-        when(tourService.getTours()).thenReturn(List.of());
+        when(tourService.getTours(eq(0), eq(5))).thenReturn(List.of());
 
         // Perform
         mockMvc.perform(get("/api/tour").accept(MediaType.APPLICATION_JSON))

@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TourService {
-    List<TourDto> getTours();
+    List<TourDto> getTours(int page, int size);
+    List<TourDto> findToursByName(String name, int page, int size);
 
     Optional<TourDto> getTour(TourId id);
 

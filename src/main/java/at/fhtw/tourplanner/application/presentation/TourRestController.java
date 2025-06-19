@@ -32,9 +32,16 @@ public class TourRestController {
     public static final String ROUTE_ID = BASE_URL + PATH_VAR_ID;
 
     @GetMapping({"", PATH_INDEX})
-    public HttpEntity<List<TourDto>> getTours() {
-        log.debug("Incoming Http GET all tours request received");
-        List<TourDto> tours = tourService.getTours();
+    public HttpEntity<List<TourDto>> getTours(@RequestParam(required = false) String name,  @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+        log.debug(
+                "Incoming Http GET all tours on page {} with size {} and name {} request received",
+                page,
+                size,
+                name
+        );
+        List<TourDto> tours = (name == null)
+                ? tourService.getTours(page, size)
+                : tourService.findToursByName(name, page, size);
         return (tours.isEmpty())
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(tours);

@@ -4,6 +4,8 @@ import at.fhtw.tourplanner.domain.model.*;
 import at.fhtw.tourplanner.infrastructure.persistence.jpa.mapper.TourEntityMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -84,8 +86,17 @@ public class JpaTourRepository implements TourRepository {
     }
 
     @Override
-    public List<Tour> findAll() {
-        return tourEntityMapper.toDomainObjects(tourEntityRepository.findAll());
+    public List<Tour> findAll(int page, int size, String sortBy) {
+        return tourEntityMapper.toDomainObjects(tourEntityRepository.findAll(PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortBy)))).getContent());
+    }
+
+    @Override
+    public List<Tour> findAllByNameLike(String name, int page, int size, String sortBy) {
+        return tourEntityMapper.toDomainObjects(tourEntityRepository
+                .findAllByNameLike(
+                        "%%%s%%".formatted(name),
+                        PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortBy)))
+                ).getContent());
     }
 
     @Override

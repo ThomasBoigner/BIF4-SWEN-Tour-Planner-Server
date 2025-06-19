@@ -78,10 +78,10 @@ public class TourServiceTest {
     @Test
     void ensureGetToursWorksProperly() {
         // Given
-        when(tourRepository.findAll()).thenReturn(List.of(tour));
+        when(tourRepository.findAll(eq(0), eq(5), eq("name"))).thenReturn(List.of(tour));
 
         // When
-        List<TourDto> tours = tourService.getTours();
+        List<TourDto> tours = tourService.getTours(0, 5);
 
         // Then
         assertThat(tours).contains(tourDtoMapper.toDto(tour));
