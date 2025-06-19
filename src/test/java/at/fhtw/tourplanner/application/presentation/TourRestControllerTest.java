@@ -95,6 +95,22 @@ public class TourRestControllerTest {
     }
 
     @Test
+    void ensureGetToursWorksProperlyWithQueryString() throws Exception {
+        // Given
+        Page<TourDto> page = Page.<TourDto>builder()
+                .content(List.of(tourDto))
+                .build();
+        when(tourService.findToursByName(eq("name"), eq(0), eq(5))).thenReturn(page);
+
+        // Perform
+        mockMvc.perform(get("/api/tour?name=name").accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(page)));
+    }
+
+    @Test
     void ensureGetToursReturnsNoContentWhenListIsEmpty() throws Exception {
         // Given
         when(tourService.getTours(eq(0), eq(5)))

@@ -92,6 +92,21 @@ public class TourServiceTest {
     }
 
     @Test
+    void ensureGetToursByNameWorksProperly() {
+        // Given
+        when(tourRepository.findAllByNameLike(eq("name"), eq(0), eq(5), eq("name"))).thenReturn(
+                Page.<Tour>builder()
+                        .content(List.of(tour))
+                        .build());
+
+        // When
+        Page<TourDto> tours = tourService.findToursByName("name", 0, 5);
+
+        // Then
+        assertThat(tours.getContent()).contains(tourDtoMapper.toDto(tour));
+    }
+
+    @Test
     void ensureGetTourWorksProperly(){
         // Given
         when(tourRepository.findTourById(eq(tour.getId()))).thenReturn(Optional.of(tour));

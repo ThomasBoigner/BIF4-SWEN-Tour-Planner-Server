@@ -154,7 +154,9 @@ public class TourEntityMapperTest {
                 .estimatedTime(120)
                 .build();
 
-        org.springframework.data.domain.Page<TourEntity> entityPage = new PageImpl<TourEntity>(List.of(tourEntity));
+        org.springframework.data.domain.Page<TourEntity> entityPage = new PageImpl<TourEntity>(
+                List.of(tourEntity)
+        );
 
         // When
         Page<Tour> tourPage = tourEntityMapper.toDomainPage(entityPage);
