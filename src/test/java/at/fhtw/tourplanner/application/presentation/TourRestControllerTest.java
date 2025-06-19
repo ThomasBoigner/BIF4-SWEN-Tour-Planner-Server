@@ -10,6 +10,7 @@ import at.fhtw.tourplanner.application.service.mappers.TourDtoMapper;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
 import at.fhtw.tourplanner.domain.model.TransportType;
+import at.fhtw.tourplanner.domain.util.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,20 +81,40 @@ public class TourRestControllerTest {
     @Test
     void ensureGetToursWorksProperly() throws Exception {
         // Given
-        when(tourService.getTours()).thenReturn(List.of(tourDto));
+        Page<TourDto> page = Page.<TourDto>builder()
+                        .content(List.of(tourDto))
+                        .build();
+        when(tourService.getTours(eq(0), eq(5))).thenReturn(page);
 
         // Perform
         mockMvc.perform(get("/api/tour").accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(tourDto))));
+                .andExpect(content().json(objectMapper.writeValueAsString(page)));
+    }
+
+    @Test
+    void ensureGetToursWorksProperlyWithQueryString() throws Exception {
+        // Given
+        Page<TourDto> page = Page.<TourDto>builder()
+                .content(List.of(tourDto))
+                .build();
+        when(tourService.findToursByName(eq("name"), eq(0), eq(5))).thenReturn(page);
+
+        // Perform
+        mockMvc.perform(get("/api/tour?name=name").accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(page)));
     }
 
     @Test
     void ensureGetToursReturnsNoContentWhenListIsEmpty() throws Exception {
         // Given
-        when(tourService.getTours()).thenReturn(List.of());
+        when(tourService.getTours(eq(0), eq(5)))
+                .thenReturn(Page.<TourDto>builder().empty(true).build());
 
         // Perform
         mockMvc.perform(get("/api/tour").accept(MediaType.APPLICATION_JSON))

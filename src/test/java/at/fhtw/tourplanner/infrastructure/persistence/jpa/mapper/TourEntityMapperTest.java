@@ -3,11 +3,14 @@ package at.fhtw.tourplanner.infrastructure.persistence.jpa.mapper;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
 import at.fhtw.tourplanner.domain.model.TransportType;
+import at.fhtw.tourplanner.domain.util.Page;
 import at.fhtw.tourplanner.infrastructure.persistence.jpa.model.AddressEmbeddable;
 import at.fhtw.tourplanner.infrastructure.persistence.jpa.model.TourEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageImpl;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -121,5 +124,52 @@ public class TourEntityMapperTest {
         assertThat(tour.getTransportType()).isEqualTo(tourEntity.getTransportType());
         assertThat(tour.getDistance()).isEqualTo(tourEntity.getDistance());
         assertThat(tour.getEstimatedTime()).isEqualTo(tourEntity.getEstimatedTime());
+    }
+
+    @Test
+    void ensureToDomainPageWorksProperly() {
+        // Given
+        TourEntity tourEntity = TourEntity.builder()
+                .id(UUID.randomUUID())
+                .name("Tour 1")
+                .description("This tour is awesome")
+                .from(AddressEmbeddable.builder()
+                        .streetName("Austria")
+                        .city("Deutsch Wagram")
+                        .zipCode(2232)
+                        .streetName("Radetzkystraße")
+                        .streetNumber("2-6")
+                        .country("Austria")
+                        .build())
+                .to(AddressEmbeddable.builder()
+                        .streetName("Austria")
+                        .city("Strasshof an der Nordbahn")
+                        .zipCode(2231)
+                        .streetName("Billroth-Gasse")
+                        .streetNumber("5")
+                        .country("Austria")
+                        .build())
+                .transportType(TransportType.BIKE)
+                .distance(20)
+                .estimatedTime(120)
+                .build();
+
+        org.springframework.data.domain.Page<TourEntity> entityPage = new PageImpl<TourEntity>(
+                List.of(tourEntity)
+        );
+
+        // When
+        Page<Tour> tourPage = tourEntityMapper.toDomainPage(entityPage);
+
+        // Then
+        assertThat(tourPage.getContent()).contains(tourEntityMapper.toDomainObject(tourEntity));
+        assertThat(tourPage.isLast()).isEqualTo(entityPage.isLast());
+        assertThat(tourPage.getTotalPages()).isEqualTo(entityPage.getTotalPages());
+        assertThat(tourPage.getTotalElements()).isEqualTo(entityPage.getTotalElements());
+        assertThat(tourPage.isFirst()).isEqualTo(entityPage.isFirst());
+        assertThat(tourPage.getSize()).isEqualTo(entityPage.getSize());
+        assertThat(tourPage.getNumber()).isEqualTo(entityPage.getNumber());
+        assertThat(tourPage.getNumberOfElements()).isEqualTo(entityPage.getNumberOfElements());
+        assertThat(tourPage.isEmpty()).isEqualTo(entityPage.isEmpty());
     }
 }

@@ -12,6 +12,7 @@ import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
 import at.fhtw.tourplanner.domain.model.TourRepository;
 import at.fhtw.tourplanner.domain.model.TransportType;
+import at.fhtw.tourplanner.domain.util.Page;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +44,7 @@ public class TourServiceTest {
     @BeforeEach
     void setUp() {
         tourDtoMapper = new TourDtoMapper(new AddressDtoMapper());
-        tourService = new TourService(
+        tourService = new TourServiceImpl(
                 tourRepository,
                 tourDtoMapper,
                 geocodeSearchService,
@@ -78,13 +79,31 @@ public class TourServiceTest {
     @Test
     void ensureGetToursWorksProperly() {
         // Given
-        when(tourRepository.findAll()).thenReturn(List.of(tour));
+        when(tourRepository.findAll(eq(0), eq(5), eq("name"))).thenReturn(
+                Page.<Tour>builder()
+                        .content(List.of(tour))
+                        .build());
 
         // When
-        List<TourDto> tours = tourService.getTours();
+        Page<TourDto> tours = tourService.getTours(0, 5);
 
         // Then
-        assertThat(tours).contains(tourDtoMapper.toDto(tour));
+        assertThat(tours.getContent()).contains(tourDtoMapper.toDto(tour));
+    }
+
+    @Test
+    void ensureGetToursByNameWorksProperly() {
+        // Given
+        when(tourRepository.findAllByNameLike(eq("name"), eq(0), eq(5), eq("name"))).thenReturn(
+                Page.<Tour>builder()
+                        .content(List.of(tour))
+                        .build());
+
+        // When
+        Page<TourDto> tours = tourService.findToursByName("name", 0, 5);
+
+        // Then
+        assertThat(tours.getContent()).contains(tourDtoMapper.toDto(tour));
     }
 
     @Test

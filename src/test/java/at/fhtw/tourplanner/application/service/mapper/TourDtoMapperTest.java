@@ -6,8 +6,11 @@ import at.fhtw.tourplanner.application.service.mappers.TourDtoMapper;
 import at.fhtw.tourplanner.domain.model.Address;
 import at.fhtw.tourplanner.domain.model.Tour;
 import at.fhtw.tourplanner.domain.model.TransportType;
+import at.fhtw.tourplanner.domain.util.Page;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -75,5 +78,63 @@ public class TourDtoMapperTest {
         assertThat(tour.getTo().longitude()).isEqualTo(tourDto.to().longitude());
         assertThat(tour.getDistance()).isEqualTo(tourDto.distance());
         assertThat(tour.getEstimatedTime()).isEqualTo(tourDto.estimatedTime());
+    }
+
+    @Test
+    void ensureToDtoPageWorksProperly() {
+        // Given
+        Tour tour = Tour.builder()
+                .name("Tour 1")
+                .description("This tour is awesome")
+                .from(Address.builder()
+                        .streetName("Austria")
+                        .city("Deutsch Wagram")
+                        .zipCode(2232)
+                        .streetName("Radetzkystraße")
+                        .streetNumber("2-6")
+                        .country("Austria")
+                        .latitude(50)
+                        .longitude(60)
+                        .build())
+                .to(Address.builder()
+                        .streetName("Austria")
+                        .city("Strasshof an der Nordbahn")
+                        .zipCode(2231)
+                        .streetName("Billroth-Gasse")
+                        .streetNumber("5")
+                        .country("Austria")
+                        .latitude(70)
+                        .longitude(80)
+                        .build())
+                .transportType(TransportType.BIKE)
+                .distance(20)
+                .estimatedTime(120)
+                .build();
+
+        Page<Tour> tourPage = Page.<Tour>builder()
+                .content(List.of(tour))
+                .last(false)
+                .totalPages(2)
+                .totalElements(2)
+                .first(true)
+                .size(1)
+                .number(0)
+                .numberOfElements(2)
+                .empty(false)
+                .build();
+
+        // When
+        Page<TourDto> tourDtoPage = tourDtoMapper.toDtoPage(tourPage);
+
+        // Then
+        assertThat(tourDtoPage.getContent()).contains(tourDtoMapper.toDto(tour));
+        assertThat(tourDtoPage.isLast()).isEqualTo(tourPage.isLast());
+        assertThat(tourDtoPage.getTotalPages()).isEqualTo(tourPage.getTotalPages());
+        assertThat(tourDtoPage.getTotalElements()).isEqualTo(tourPage.getTotalElements());
+        assertThat(tourDtoPage.isFirst()).isEqualTo(tourPage.isFirst());
+        assertThat(tourDtoPage.getSize()).isEqualTo(tourPage.getSize());
+        assertThat(tourDtoPage.getNumber()).isEqualTo(tourPage.getNumber());
+        assertThat(tourDtoPage.getNumberOfElements()).isEqualTo(tourPage.getNumberOfElements());
+        assertThat(tourDtoPage.isEmpty()).isEqualTo(tourPage.isEmpty());
     }
 }
