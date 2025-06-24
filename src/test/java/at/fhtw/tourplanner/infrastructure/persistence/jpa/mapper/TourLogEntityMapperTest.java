@@ -173,15 +173,16 @@ public class TourLogEntityMapperTest {
                 .rating(5)
                 .build();
 
-        org.springframework.data.domain.Page<TourLogEntity> entityPage = new PageImpl<TourLogEntity>(
-                List.of(tourLogEntity)
-        );
+        org.springframework.data.domain.Page<TourLogEntity> entityPage =
+                new PageImpl<TourLogEntity>(List.of(tourLogEntity));
 
         // When
         Page<TourLog> tourLogPage = tourLogEntityMapper.toDomainPage(entityPage);
 
         // Then
-        assertThat(tourLogPage.getContent()).contains(tourLogEntityMapper.toDomainObject(tourLogEntity));
+        assertThat(tourLogPage.getContent()).contains(
+                tourLogEntityMapper.toDomainObject(tourLogEntity)
+        );
         assertThat(tourLogPage.isLast()).isEqualTo(entityPage.isLast());
         assertThat(tourLogPage.getTotalPages()).isEqualTo(entityPage.getTotalPages());
         assertThat(tourLogPage.getTotalElements()).isEqualTo(entityPage.getTotalElements());

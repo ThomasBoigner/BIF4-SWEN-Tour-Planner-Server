@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -92,7 +91,7 @@ public class JpaTourLogRepository implements TourLogRepository {
         return tourLogEntityMapper.toDomainPage(tourLogEntityRepository
                 .findAllByTourIdAndCommentLike(
                         tourId.id(),
-                        comment,
+                        "%%%s%%".formatted(comment),
                         PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortBy)))
                 ));
     }

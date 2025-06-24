@@ -33,7 +33,7 @@ public class TourLogServiceImpl implements TourLogService{
                 size);
 
         Page<TourLogDto> tourLogs = tourLogDtoMapper.toDtoPage(tourLogRepository
-                .findAllByTourId(tourId, page, size, "rating"));
+                .findAllByTourId(tourId, page, size, "comment"));
 
         log.info(
                 "Retrieved {} tour logs of tour with id {}",
@@ -44,16 +44,22 @@ public class TourLogServiceImpl implements TourLogService{
     }
 
     @Override
-    public Page<TourLogDto> getTourLogsOfTourByComment(TourId tourId, String comment, int page, int size) {
+    public Page<TourLogDto> getTourLogsOfTourByComment(
+            TourId tourId,
+            String comment,
+            int page,
+            int size
+    ) {
         log.debug(
-                "Trying to get all tour logs of tour with id {} with comment like {} on page {} with size {}",
+                "Trying to get all tour logs of tour with id {} "
+                        .concat("with comment like {} on page {} with size {}"),
                 tourId.id(),
                 comment,
                 page,
                 size
         );
         Page<TourLogDto> tourLogs = tourLogDtoMapper.toDtoPage(tourLogRepository
-                .findAllByTourIdAndCommentLike(tourId, comment, page, size, "rating"));
+                .findAllByTourIdAndCommentLike(tourId, comment, page, size, "comment"));
 
         log.info(
                 "Retrieved {} tour logs of tour with id {} with comment like {}",
