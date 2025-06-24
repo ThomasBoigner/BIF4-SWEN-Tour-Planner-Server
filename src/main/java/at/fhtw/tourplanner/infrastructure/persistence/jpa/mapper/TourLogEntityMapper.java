@@ -4,6 +4,7 @@ import at.fhtw.tourplanner.domain.model.Difficulty;
 import at.fhtw.tourplanner.domain.model.Rating;
 import at.fhtw.tourplanner.domain.model.TourLog;
 import at.fhtw.tourplanner.domain.model.TourLogId;
+import at.fhtw.tourplanner.domain.util.Page;
 import at.fhtw.tourplanner.infrastructure.persistence.jpa.model.TourLogEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -39,6 +40,21 @@ public class TourLogEntityMapper extends AbstractEntityMapper<TourLog, TourLogEn
                 .difficulty(domainObject.getDifficulty().difficulty())
                 .distance(domainObject.getDistance())
                 .rating(domainObject.getRating().rating())
+                .build();
+    }
+
+    public Page<TourLog> toDomainPage(
+            org.springframework.data.domain.Page<TourLogEntity> entityPage) {
+        return Page.<TourLog>builder()
+                .content(toDomainObjects(entityPage.getContent()))
+                .last(entityPage.isLast())
+                .totalPages(entityPage.getTotalPages())
+                .totalElements(entityPage.getTotalElements())
+                .first(entityPage.isFirst())
+                .size(entityPage.getSize())
+                .number(entityPage.getNumber())
+                .numberOfElements(entityPage.getNumberOfElements())
+                .empty(entityPage.isEmpty())
                 .build();
     }
 }

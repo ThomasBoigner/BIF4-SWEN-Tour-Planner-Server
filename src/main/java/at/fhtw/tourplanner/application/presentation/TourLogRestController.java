@@ -6,6 +6,7 @@ import at.fhtw.tourplanner.application.service.commands.UpdateTourLogCommand;
 import at.fhtw.tourplanner.application.service.dto.TourLogDto;
 import at.fhtw.tourplanner.domain.model.TourId;
 import at.fhtw.tourplanner.domain.model.TourLogId;
+import at.fhtw.tourplanner.domain.util.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,9 +33,24 @@ public class TourLogRestController {
     public static final String PATH_VAR_TOUR_ID = "tour/{tourId}";
 
     @GetMapping(value = PATH_VAR_TOUR_ID)
-    public HttpEntity<List<TourLogDto>> getTourLogsOfTour(@PathVariable UUID tourId) {
-        log.debug("Incoming Http GET tour logs with tour id {} request received", tourId);
-        List<TourLogDto> tourLogs = tourLogService.getTourLogsOfTour(new TourId(tourId));
+    public HttpEntity<Page<TourLogDto>> getTourLogsOfTour(
+            @PathVariable UUID tourId,
+            @RequestParam(required = false) String comment,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        log.debug(
+                "Incoming Http GET tour logs with tour id {} on page {} "
+                        .concat("with size {} and comment {} request received"),
+                tourId,
+                page,
+                size,
+                comment
+        );
+        Page<TourLogDto> tourLogs = (comment == null)
+                ? tourLogService.getTourLogsOfTour(new TourId(tourId), page, size)
+                : tourLogService.getTourLogsOfTourByComment(
+                        new TourId(tourId), comment, page, size);
         return (tourLogs.isEmpty())
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(tourLogs);
