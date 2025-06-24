@@ -5,6 +5,7 @@ import at.fhtw.tourplanner.application.service.dto.TourLogDto;
 import at.fhtw.tourplanner.application.service.mappers.DurationDtoMapper;
 import at.fhtw.tourplanner.application.service.mappers.TourLogDtoMapper;
 import at.fhtw.tourplanner.domain.model.*;
+import at.fhtw.tourplanner.domain.util.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,7 +93,9 @@ public class TourLogRestControllerTest {
     @Test
     void ensureGetTourLogsOfTourWorksProperly() throws Exception {
         // Given
-        when(tourLogService.getTourLogsOfTour(eq(tour.getId()))).thenReturn(List.of(tourLogDto));
+        Page<TourLogDto> page = Page.<TourLogDto>builder().content(List.of(tourLogDto)).build();
+        when(tourLogService.getTourLogsOfTour(eq(tour.getId()), eq(0), eq(5)))
+                .thenReturn(page);
 
         // Perform
         mockMvc.perform(get("/api/tourLog/tour/%s".formatted(tour.getId().id()))
@@ -100,13 +103,34 @@ public class TourLogRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(objectMapper.writeValueAsString(List.of(tourLogDto))));
+                .andExpect(content().json(objectMapper.writeValueAsString(page)));
+    }
+
+    @Test
+    void ensureGetTourLogsOfTourWorksProperlyWithQueryString() throws Exception {
+        // Given
+        Page<TourLogDto> page = Page.<TourLogDto>builder().content(List.of(tourLogDto)).build();
+        when(tourLogService.getTourLogsOfTourByComment(
+                eq(tour.getId()),
+                eq("comment"),
+                eq(0),
+                eq(5))
+        ).thenReturn(page);
+
+        // Perform
+        mockMvc.perform(get("/api/tourLog/tour/%s?comment=comment".formatted(tour.getId().id()))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(objectMapper.writeValueAsString(page)));
     }
 
     @Test
     void ensureGetTourLogsOfTourReturnsNoContentWhenListIsEmpty() throws Exception {
         // Given
-        when(tourLogService.getTourLogsOfTour(eq(tour.getId()))).thenReturn(List.of());
+        when(tourLogService.getTourLogsOfTour(eq(tour.getId()), eq(0), eq(5)))
+                .thenReturn(Page.<TourLogDto>builder().empty(true).build());
 
         // Perform
         mockMvc.perform(get("/api/tourLog/tour/%s".formatted(tour.getId().id()))

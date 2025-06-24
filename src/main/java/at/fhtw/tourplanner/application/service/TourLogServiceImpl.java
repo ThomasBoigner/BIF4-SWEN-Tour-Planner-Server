@@ -5,12 +5,12 @@ import at.fhtw.tourplanner.application.service.commands.UpdateTourLogCommand;
 import at.fhtw.tourplanner.application.service.dto.TourLogDto;
 import at.fhtw.tourplanner.application.service.mappers.TourLogDtoMapper;
 import at.fhtw.tourplanner.domain.model.*;
+import at.fhtw.tourplanner.domain.util.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -25,12 +25,48 @@ public class TourLogServiceImpl implements TourLogService{
     private final TourLogDtoMapper tourLogDtoMapper;
 
     @Override
-    public List<TourLogDto> getTourLogsOfTour(TourId tourId) {
-        log.debug("Trying to get all tour logs of tour with id {}", tourId.id());
-        List<TourLogDto> tourLogs = tourLogRepository.findAllByTourId(tourId)
-                .stream().map(tourLogDtoMapper::toDto).toList();
-        log.info("Retrieved all ({}) tour logs of tour with id {}", tourLogs.size(), tourId.id());
+    public Page<TourLogDto> getTourLogsOfTour(TourId tourId, int page, int size) {
+        log.debug(
+                "Trying to get all tour logs of tour with id {} on page {} with size {}",
+                tourId.id(),
+                page,
+                size);
+
+        Page<TourLogDto> tourLogs = tourLogDtoMapper.toDtoPage(tourLogRepository
+                .findAllByTourId(tourId, page, size, "comment"));
+
+        log.info(
+                "Retrieved {} tour logs of tour with id {}",
+                tourLogs.getContent().size(),
+                tourId.id()
+        );
         return  tourLogs;
+    }
+
+    @Override
+    public Page<TourLogDto> getTourLogsOfTourByComment(
+            TourId tourId,
+            String comment,
+            int page,
+            int size
+    ) {
+        log.debug(
+                "Trying to get all tour logs of tour with id {} "
+                        .concat("with comment like {} on page {} with size {}"),
+                tourId.id(),
+                comment,
+                page,
+                size
+        );
+        Page<TourLogDto> tourLogs = tourLogDtoMapper.toDtoPage(tourLogRepository
+                .findAllByTourIdAndCommentLike(tourId, comment, page, size, "comment"));
+
+        log.info(
+                "Retrieved {} tour logs of tour with id {} with comment like {}",
+                tourLogs.getContent().size(),
+                tourId.id(),
+                comment);
+        return tourLogs;
     }
 
     @Override

@@ -23,7 +23,7 @@ public class ArchitectureTest {
     private static final String PKG_ADAPTER_REST = "..infrastructure.rest..";
 
     @ArchTest
-    static final ArchRule LAYERED_ARCHITECTURE = onionArchitecture()
+    static final ArchRule ONION_ARCHITECTURE = onionArchitecture()
             .domainModels(PKG_DOMAIN_MODEL)
             .domainServices(PKG_DOMAIN_SERVICES)
             .applicationServices(PKG_APPLICATION_SERVICES)

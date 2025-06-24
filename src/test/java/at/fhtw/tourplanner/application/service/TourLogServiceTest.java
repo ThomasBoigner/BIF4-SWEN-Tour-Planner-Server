@@ -4,6 +4,7 @@ import at.fhtw.tourplanner.application.service.dto.TourLogDto;
 import at.fhtw.tourplanner.application.service.mappers.DurationDtoMapper;
 import at.fhtw.tourplanner.application.service.mappers.TourLogDtoMapper;
 import at.fhtw.tourplanner.domain.model.*;
+import at.fhtw.tourplanner.domain.util.Page;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,12 +78,32 @@ public class TourLogServiceTest {
     @Test
     void ensureGetTourLogsOfTourWorksProperly() {
         // Given
-        when(tourLogRepository.findAllByTourId(eq(tour.getId()))).thenReturn(List.of(tourLog));
+        when(tourLogRepository.findAllByTourId(eq(tour.getId()), eq(0), eq(5), eq("comment")))
+                .thenReturn(Page.<TourLog>builder().content(List.of(tourLog)).build());
 
         // When
-        List<TourLogDto> tourLogs = tourLogService.getTourLogsOfTour(tour.getId());
+        Page<TourLogDto> tourLogs = tourLogService.getTourLogsOfTour(tour.getId(), 0, 5);
 
         // Then
-        assertThat(tourLogs).contains(tourLogDtoMapper.toDto(tourLog));
+        assertThat(tourLogs.getContent()).contains(tourLogDtoMapper.toDto(tourLog));
+    }
+
+    @Test
+    void ensureGetTourLogsOfTourByCommentWorksProperly() {
+        // Given
+        when(tourLogRepository.findAllByTourIdAndCommentLike(
+                eq(tour.getId()),
+                eq("comment"),
+                eq(0),
+                eq(5),
+                eq("comment"))
+        ).thenReturn(Page.<TourLog>builder().content(List.of(tourLog)).build());
+
+        // When
+        Page<TourLogDto> tourLogs = tourLogService.getTourLogsOfTourByComment(
+                tour.getId(), "comment", 0, 5);
+
+        // Then
+        assertThat(tourLogs.getContent()).contains(tourLogDtoMapper.toDto(tourLog));
     }
 }
