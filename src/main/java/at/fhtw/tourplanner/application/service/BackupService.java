@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface BackupService {
     Optional<BackupTourDto> exportTour(TourId tourId);
+    void importTour(BackupTourDto backupTourDto);
 }
