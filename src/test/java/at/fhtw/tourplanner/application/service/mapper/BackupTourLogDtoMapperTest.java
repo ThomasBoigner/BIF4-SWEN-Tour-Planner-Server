@@ -60,9 +60,12 @@ public class BackupTourLogDtoMapperTest {
         BackupTourLogDto backupTourLogDto = backupTourLogDtoMapper.toDto(tourLog);
 
         // Then
-        assertThat(tourLog.getDuration().startTime()).isEqualTo(backupTourLogDto.duration().startTime());
-        assertThat(tourLog.getDuration().endTime()).isEqualTo(backupTourLogDto.duration().endTime());
-        assertThat(tourLog.getDuration().duration()).isEqualTo(backupTourLogDto.duration().duration());
+        assertThat(tourLog.getDuration().startTime())
+                .isEqualTo(backupTourLogDto.duration().startTime());
+        assertThat(tourLog.getDuration().endTime())
+                .isEqualTo(backupTourLogDto.duration().endTime());
+        assertThat(tourLog.getDuration().duration())
+                .isEqualTo(backupTourLogDto.duration().duration());
         assertThat(tourLog.getComment()).isEqualTo(backupTourLogDto.comment());
         assertThat(tourLog.getDifficulty().difficulty()).isEqualTo(backupTourLogDto.difficulty());
         assertThat(tourLog.getDistance()).isEqualTo(backupTourLogDto.distance());

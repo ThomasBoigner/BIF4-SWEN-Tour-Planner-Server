@@ -118,7 +118,8 @@ public class BackupServiceTest {
 
         // Then
         assertThat(backupTourDto.isPresent()).isTrue();
-        assertThat(backupTourDto.get()).isEqualTo(backupTourDtoMapper.toDto(tour, List.of(tourLog)));
+        assertThat(backupTourDto.get())
+                .isEqualTo(backupTourDtoMapper.toDto(tour, List.of(tourLog)));
     }
 
     @Test

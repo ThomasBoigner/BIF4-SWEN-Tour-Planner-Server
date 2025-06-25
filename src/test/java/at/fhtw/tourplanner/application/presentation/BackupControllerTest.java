@@ -47,7 +47,9 @@ public class BackupControllerTest {
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        mockMvc = MockMvcBuilders.standaloneSetup(new BackupController(backupService, objectMapper)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(
+                new BackupController(backupService, objectMapper)
+        ).build();
         backupTourDtoMapper = new BackupTourDtoMapper(
                 new AddressDtoMapper(),
                 new BackupTourLogDtoMapper(new DurationDtoMapper())

@@ -21,7 +21,10 @@ public class BackupTourDtoMapperTest {
     @BeforeEach
     void setUp() {
         backupTourLogDtoMapper = new BackupTourLogDtoMapper(new DurationDtoMapper());
-        backupTourDtoMapper = new BackupTourDtoMapper(new AddressDtoMapper(), backupTourLogDtoMapper);
+        backupTourDtoMapper = new BackupTourDtoMapper(
+                new AddressDtoMapper(),
+                backupTourLogDtoMapper
+        );
     }
 
     @Test
