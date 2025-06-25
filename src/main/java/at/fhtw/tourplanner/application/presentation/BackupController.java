@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 
 @Slf4j
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", exposedHeaders = HttpHeaders.CONTENT_DISPOSITION)
 @RestController
 @RequestMapping(value = BackupController.BASE_URL)
 public class BackupController {
@@ -41,8 +42,8 @@ public class BackupController {
 
         try {
             return ResponseEntity.ok().header(
-                    "Content-Disposition",
-                    String.format("attachment; filename=%s", tour.name())
+                    HttpHeaders.CONTENT_DISPOSITION,
+                    String.format("attachment; filename=%s.json", tour.name())
             ).body(objectMapper.writeValueAsBytes(tour));
         } catch (JsonProcessingException e) {
             return ResponseEntity.internalServerError().build();

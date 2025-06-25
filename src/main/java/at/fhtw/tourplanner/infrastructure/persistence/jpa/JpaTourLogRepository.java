@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -82,6 +83,13 @@ public class JpaTourLogRepository implements TourLogRepository {
         return tourLogEntityMapper.toDomainPage(tourLogEntityRepository.findAllByTourId(
                 tourId.id(),
                 PageRequest.of(page, size, Sort.by(Sort.Order.asc(sortBy))))
+        );
+    }
+
+    @Override
+    public List<TourLog> findAllByTourId(TourId tourId) {
+        return tourLogEntityMapper.toDomainObjects(
+                tourLogEntityRepository.findAllByTourId(tourId.id())
         );
     }
 
