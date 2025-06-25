@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface TourLogEntityRepository extends JpaRepository<TourLogEntity, UUID> {
@@ -14,6 +15,7 @@ public interface TourLogEntityRepository extends JpaRepository<TourLogEntity, UU
             String comment,
             Pageable pageable
     );
+    List<TourLogEntity> findAllByTourId(UUID tourId);
     Page<TourLogEntity> findAllByTourId(UUID tourId, Pageable pageable);
     UUID tour(TourEntity tour);
     void deleteTourLogEntityById(UUID id);
