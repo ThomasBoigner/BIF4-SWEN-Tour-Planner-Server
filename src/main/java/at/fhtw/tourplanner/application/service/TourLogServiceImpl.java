@@ -2,6 +2,7 @@ package at.fhtw.tourplanner.application.service;
 
 import at.fhtw.tourplanner.application.service.commands.CreateTourLogCommand;
 import at.fhtw.tourplanner.application.service.commands.UpdateTourLogCommand;
+import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.application.service.dto.TourLogDto;
 import at.fhtw.tourplanner.application.service.mappers.TourLogDtoMapper;
 import at.fhtw.tourplanner.domain.model.*;
@@ -67,6 +68,17 @@ public class TourLogServiceImpl implements TourLogService{
                 tourId.id(),
                 comment);
         return tourLogs;
+    }
+
+    @Override
+    public Optional<TourLogDto> getTourLog(TourLogId id) {
+        log.debug("Trying to get tour log with id {}", id);
+        Optional<TourLogDto> tourLog = tourLogRepository.findTourEntityById(id)
+                .map(tourLogDtoMapper::toDto);
+        tourLog.ifPresentOrElse(
+                tl -> log.info("Found tour log {} with id {}", tl, id.id()),
+                () -> log.info("No tour log with id {} found", id.id()));
+        return tourLog;
     }
 
     @Override
