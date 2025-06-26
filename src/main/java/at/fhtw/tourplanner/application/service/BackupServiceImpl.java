@@ -38,6 +38,7 @@ public class BackupServiceImpl implements BackupService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void importTour(BackupTourDto backupTourDto) {
         log.debug("Trying to import tour {}", backupTourDto);
         Objects.requireNonNull(backupTourDto, "backupTourDto must not be null");

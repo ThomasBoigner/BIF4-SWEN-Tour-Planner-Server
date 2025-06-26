@@ -12,7 +12,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,10 +30,11 @@ public class BackupController {
 
     public static final String BASE_URL = "/api/backup";
     public static final String EXPORT_URL = "/export/{id}";
+    public static final String IMPORT_URL = "/import";
 
     @GetMapping(value = EXPORT_URL, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody HttpEntity<byte[]> exportTour(@PathVariable UUID id)  {
-        log.debug("Incoming Http GET request to export tour with id {} received.", id);
+        log.debug("Incoming Http GET request to export tour with id {} received", id);
         Optional<BackupTourDto> optional = backupService.exportTour(new TourId(id));
 
         if (optional.isEmpty()) {
@@ -48,5 +51,23 @@ public class BackupController {
         } catch (JsonProcessingException e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @PostMapping(value = IMPORT_URL)
+    public HttpEntity<Void> importTour(@RequestParam("file") MultipartFile file) {
+        log.debug("Incoming Http POST request to import tour received");
+
+        BackupTourDto backupTourDto = null;
+        try {
+            backupTourDto = objectMapper.readValue(
+                    new String(file.getBytes()),
+                    BackupTourDto.class
+            );
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        backupService.importTour(backupTourDto);
+        return ResponseEntity.ok().build();
     }
 }
