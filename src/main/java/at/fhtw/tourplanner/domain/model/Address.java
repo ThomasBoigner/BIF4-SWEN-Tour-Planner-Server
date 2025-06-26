@@ -7,7 +7,7 @@ import static at.fhtw.tourplanner.domain.util.EnsurerFactory.when;
 
 @Slf4j
 @Builder
-public record Address(
+public record   Address(
         String country,
         String city,
         int zipCode,

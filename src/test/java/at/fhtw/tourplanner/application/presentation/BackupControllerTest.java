@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -118,5 +119,16 @@ public class BackupControllerTest {
                         .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE))
                 .andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void ensureImportTourWorksProperly() throws Exception {
+        // Perform
+        mockMvc.perform(multipart("/api/backup/import")
+                        .file("file", objectMapper.writeValueAsBytes(backupTourDto))
+                        .characterEncoding("UTF-8"))
+                .andDo(print())
+                .andExpect(status().isOk());
+        verify(backupService).importTour(eq(backupTourDto));
     }
 }
