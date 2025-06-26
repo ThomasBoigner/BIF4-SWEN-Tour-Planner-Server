@@ -2,7 +2,6 @@ package at.fhtw.tourplanner.application.service;
 
 import at.fhtw.tourplanner.application.service.commands.CreateTourLogCommand;
 import at.fhtw.tourplanner.application.service.commands.UpdateTourLogCommand;
-import at.fhtw.tourplanner.application.service.dto.TourDto;
 import at.fhtw.tourplanner.application.service.dto.TourLogDto;
 import at.fhtw.tourplanner.application.service.mappers.TourLogDtoMapper;
 import at.fhtw.tourplanner.domain.model.*;

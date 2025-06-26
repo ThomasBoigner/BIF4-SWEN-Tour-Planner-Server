@@ -1,7 +1,6 @@
 package at.fhtw.tourplanner.application.service;
 
 import at.fhtw.tourplanner.application.service.commands.CreateTourLogCommand;
-import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
 import at.fhtw.tourplanner.application.service.commands.UpdateTourLogCommand;
 import at.fhtw.tourplanner.application.service.dto.TourLogDto;
 import at.fhtw.tourplanner.application.service.mappers.DurationDtoMapper;
@@ -17,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -117,7 +115,8 @@ public class TourLogServiceTest {
     @Test
     void ensureGetTourLogWorksProperly() {
         // Given
-        when(tourLogRepository.findTourEntityById(eq(tourLog.getId()))).thenReturn(Optional.of(tourLog));
+        when(tourLogRepository.findTourEntityById(eq(tourLog.getId())))
+                .thenReturn(Optional.of(tourLog));
 
         // When
         Optional<TourLogDto> tourLogDto = tourLogService.getTourLog(tourLog.getId());
@@ -130,7 +129,8 @@ public class TourLogServiceTest {
     @Test
     void ensureGetTourLogWorksProperlyWhenTourLogCanNotBeFound() {
         // Given
-        when(tourLogRepository.findTourEntityById(eq(tourLog.getId()))).thenReturn(Optional.empty());
+        when(tourLogRepository.findTourEntityById(eq(tourLog.getId())))
+                .thenReturn(Optional.empty());
 
         // When
         Optional<TourLogDto> tourLogDto = tourLogService.getTourLog(tourLog.getId());
@@ -197,7 +197,8 @@ public class TourLogServiceTest {
                 .rating(5)
                 .difficulty(5)
                 .build();
-        when(tourLogRepository.findTourEntityById(eq(tourLog.getId()))).thenReturn(Optional.of(tourLog));
+        when(tourLogRepository.findTourEntityById(eq(tourLog.getId())))
+                .thenReturn(Optional.of(tourLog));
         when(tourLogRepository.save(any(TourLog.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
@@ -227,10 +228,12 @@ public class TourLogServiceTest {
                 .rating(5)
                 .difficulty(5)
                 .build();
-        when(tourLogRepository.findTourEntityById(eq(tourLog.getId()))).thenReturn(Optional.empty());
+        when(tourLogRepository.findTourEntityById(eq(tourLog.getId())))
+                .thenReturn(Optional.empty());
 
         // When
-        assertThrows(IllegalArgumentException.class, () -> tourLogService.updateTourLog(tourLog.getId(), command));
+        assertThrows(IllegalArgumentException.class,
+                () -> tourLogService.updateTourLog(tourLog.getId(), command));
     }
 
     @Test

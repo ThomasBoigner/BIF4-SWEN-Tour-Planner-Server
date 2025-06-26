@@ -31,6 +31,7 @@ public class TourLogRestController {
     public static final String PATH_INDEX = "/";
     public static final String PATH_VAR_ID = "/{id}";
     public static final String PATH_VAR_TOUR_ID = "tour/{tourId}";
+    public static final String ROUTE_ID = BASE_URL + PATH_VAR_ID;
 
     @GetMapping(value = PATH_VAR_TOUR_ID)
     public HttpEntity<Page<TourLogDto>> getTourLogsOfTour(
@@ -54,6 +55,14 @@ public class TourLogRestController {
         return (tourLogs.isEmpty())
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(tourLogs);
+    }
+
+    @GetMapping(PATH_VAR_ID)
+    public HttpEntity<TourLogDto> getTourLog(@PathVariable UUID id) {
+        log.debug("Incoming Http GET tour log with id {} request received", id);
+        return tourLogService.getTourLog(new TourLogId(id))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping({"", PATH_INDEX})
@@ -80,7 +89,7 @@ public class TourLogRestController {
     }
 
     private URI createSelfLink(TourLogDto tourLog) {
-        URI selfLink = UriComponentsBuilder.fromPath(PATH_VAR_TOUR_ID)
+        URI selfLink = UriComponentsBuilder.fromPath(ROUTE_ID)
                 .uriVariables(Map.of("id", tourLog.id()))
                 .build().toUri();
         log.trace("Created self link {} for tourLog {}", selfLink, tourLog);
