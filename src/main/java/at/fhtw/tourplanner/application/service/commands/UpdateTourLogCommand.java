@@ -3,11 +3,9 @@ package at.fhtw.tourplanner.application.service.commands;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Builder
 public record UpdateTourLogCommand(
-        UUID tourId,
         LocalDateTime startTime,
         LocalDateTime endTime,
         String comment,

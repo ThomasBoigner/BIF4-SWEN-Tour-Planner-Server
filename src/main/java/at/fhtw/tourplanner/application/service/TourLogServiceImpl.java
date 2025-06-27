@@ -70,6 +70,17 @@ public class TourLogServiceImpl implements TourLogService{
     }
 
     @Override
+    public Optional<TourLogDto> getTourLog(TourLogId id) {
+        log.debug("Trying to get tour log with id {}", id);
+        Optional<TourLogDto> tourLog = tourLogRepository.findTourEntityById(id)
+                .map(tourLogDtoMapper::toDto);
+        tourLog.ifPresentOrElse(
+                tl -> log.info("Found tour log {} with id {}", tl, id.id()),
+                () -> log.info("No tour log with id {} found", id.id()));
+        return tourLog;
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public TourLogDto createTourLog(CreateTourLogCommand command) {
         log.debug("Trying to create tourLog with command {}", command);
