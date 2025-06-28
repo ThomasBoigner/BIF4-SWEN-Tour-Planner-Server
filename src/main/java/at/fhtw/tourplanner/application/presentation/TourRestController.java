@@ -1,5 +1,6 @@
 package at.fhtw.tourplanner.application.presentation;
 
+import at.fhtw.tourplanner.application.service.PdfReportService;
 import at.fhtw.tourplanner.application.service.TourService;
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
 import at.fhtw.tourplanner.application.service.commands.UpdateTourCommand;
@@ -25,6 +26,7 @@ import java.util.UUID;
 @RequestMapping(value = TourRestController.BASE_URL)
 public class TourRestController {
     private final TourService tourService;
+    private final PdfReportService pdfReportService;
 
     public static final String BASE_URL = "/api/tour";
     public static final String PATH_INDEX = "/";
@@ -80,6 +82,24 @@ public class TourRestController {
         log.debug("Incoming Http DELETE request to delete tour with id {} received", id);
         tourService.deleteTour(new TourId(id));
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/report")
+    public ResponseEntity<byte[]> getTourReport(@PathVariable UUID id) {
+        byte[] pdf = pdfReportService.generateTourReport(id.toString());
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=tour-report.pdf")
+                .body(pdf);
+    }
+
+    @GetMapping("/report/summary")
+    public ResponseEntity<byte[]> getSummaryReport() {
+        byte[] pdf = pdfReportService.generateSummaryReport();
+        return ResponseEntity.ok()
+                .header("Content-Type", "application/pdf")
+                .header("Content-Disposition", "inline; filename=summary-report.pdf")
+                .body(pdf);
     }
 
     private URI createSelfLink(TourDto tour) {
