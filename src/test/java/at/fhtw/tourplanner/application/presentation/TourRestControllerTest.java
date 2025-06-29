@@ -1,5 +1,6 @@
 package at.fhtw.tourplanner.application.presentation;
 
+import at.fhtw.tourplanner.application.service.PdfReportService;
 import at.fhtw.tourplanner.application.service.TourService;
 import at.fhtw.tourplanner.application.service.commands.CreateAddressCommand;
 import at.fhtw.tourplanner.application.service.commands.CreateTourCommand;
@@ -39,6 +40,7 @@ public class TourRestControllerTest {
 
     @Mock
     private TourService tourService;
+    private PdfReportService pdfReportService;
     private TourDtoMapper tourDtoMapper;
 
     private Tour tour;
@@ -48,7 +50,8 @@ public class TourRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new TourRestController(tourService)).build();
+        mockMvc = MockMvcBuilders.
+                standaloneSetup(new TourRestController(tourService, pdfReportService)).build();
 
         objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
         tourDtoMapper = new TourDtoMapper(new AddressDtoMapper());

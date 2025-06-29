@@ -28,7 +28,8 @@ public class PdfReportServiceImpl implements PdfReportService {
                 .orElseThrow(() -> new IllegalArgumentException("Tour not found"));
 
         List<TourLogDto> logs = tourLogService.getTourLogsOfTour(
-                new at.fhtw.tourplanner.domain.model.TourId(java.util.UUID.fromString(tourId)), 0, 1000
+                new at.fhtw.tourplanner.domain.model.TourId(java.util.UUID.fromString(tourId)),
+                0, 1000
         ).getContent();
 
         try (PDDocument document = new PDDocument();
