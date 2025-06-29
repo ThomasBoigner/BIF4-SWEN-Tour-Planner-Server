@@ -23,7 +23,8 @@ public class PdfReportServiceImpl implements PdfReportService {
 
     @Override
     public byte[] generateTourReport(String tourId) {
-        TourDto tour = tourService.getTour(new at.fhtw.tourplanner.domain.model.TourId(java.util.UUID.fromString(tourId)))
+        TourDto tour = tourService.getTour(new at.fhtw.tourplanner.domain.
+                        model.TourId(java.util.UUID.fromString(tourId)))
                 .orElseThrow(() -> new IllegalArgumentException("Tour not found"));
 
         List<TourLogDto> logs = tourLogService.getTourLogsOfTour(
