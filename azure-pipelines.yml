@@ -1,17 +1,14 @@
 steps:
   # 1. Java 24 installieren
-  - task: JavaToolInstaller@0
+  - script: |
+      wget https://download.java.net/java/GA/jdk24/1f9ff9062db4449d8ca828c504ffae90/36/GPL/openjdk-24_linux-x64_bin.tar.gz
+      tar -xzf openjdk-24_linux-x64_bin.tar.gz
+      echo "##vso[task.setvariable variable=JAVA_HOME]$(pwd)/jdk-24"
+      echo "##vso[task.prependpath]$(pwd)/jdk-24/bin"
     displayName: 'Install Java 24'
-    inputs:
-      versionSpec: '24'
-      jdkArchitectureOption: 'x64'
-      jdkSourceOption: 'PreInstalled'
 
   # 2. Maven Build
-  - task: Maven@4
+  - script: |
+      java -version
+      mvn -B clean package -DskipTests -f pom.xml
     displayName: 'Build & Test'
-    inputs:
-      mavenPomFile: 'pom.xml'
-      goals: 'clean package'
-      options: '-B -DskipTests'
-      jdkVersionOption: '1.24'
