@@ -6,22 +6,3 @@ steps:
       mavenPomFile: 'pom.xml'
       goals: 'clean package'
       options: '-B -DskipTests'
-
-  # 2. Login zur Azure Container Registry via Azure CLI
-  - task: AzureCLI@2
-    displayName: 'Docker Build and Push'
-    inputs:
-      azureSubscription: 'azure-sc-tourplanner'
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        # Login zur ACR
-        az acr login --name <REGISTRY_NAME>
-        
-        # Docker Build
-        docker build -t <REGISTRY_NAME>.azurecr.io/tourplanner-server:$(Build.BuildId) -f src/main/docker/Dockerfile .
-        docker tag <REGISTRY_NAME>.azurecr.io/tourplanner-server:$(Build.BuildId) <REGISTRY_NAME>.azurecr.io/tourplanner-server:latest
-        
-        # Push
-        docker push <REGISTRY_NAME>.azurecr.io/tourplanner-server:$(Build.BuildId)
-        docker push <REGISTRY_NAME>.azurecr.io/tourplanner-server:latest
