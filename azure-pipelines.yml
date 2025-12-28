@@ -1,3 +1,10 @@
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
 steps:
   # 1. Java 24 installieren
   - script: |
@@ -12,3 +19,11 @@ steps:
       java -version
       mvn -B clean package -DskipTests -f pom.xml
     displayName: 'Build & Test'
+  - task: AzureCLI@2
+    displayName: 'List Container Registries'
+    inputs:
+      azureSubscription: 'azure-sc-tourplanner'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az acr list --output table
