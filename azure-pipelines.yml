@@ -1,8 +1,17 @@
 steps:
-  # 1. Maven Build
+  # 1. Java 24 installieren
+  - task: JavaToolInstaller@0
+    displayName: 'Install Java 24'
+    inputs:
+      versionSpec: '24'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled'
+
+  # 2. Maven Build
   - task: Maven@4
     displayName: 'Build & Test'
     inputs:
       mavenPomFile: 'pom.xml'
       goals: 'clean package'
       options: '-B -DskipTests'
+      jdkVersionOption: '1.24'
