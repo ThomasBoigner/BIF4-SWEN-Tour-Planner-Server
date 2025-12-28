@@ -1,9 +1,14 @@
-
 trigger:
-- main
+  - main
 
 pool:
   vmImage: 'ubuntu-latest'
+
+variables:
+  registryName: 'tourplanner'
+  imageRepository: 'tourplanner-server'
+  dockerfilePath: 'src/main/docker/Dockerfile'
+  tag: '$(Build.BuildId)'
 
 steps:
   # 1. Java 24 installieren
@@ -18,12 +23,20 @@ steps:
   - script: |
       java -version
       mvn -B clean package -DskipTests -f pom.xml
-    displayName: 'Build & Test'
+    displayName: 'Maven Build'
+
+  # 3. Docker Build & Push
   - task: AzureCLI@2
-    displayName: 'List Container Registries'
+    displayName: 'Docker Build and Push'
     inputs:
       azureSubscription: 'azure-sc-tourplanner'
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az acr list --output table
+        az acr login --name $(registryName)
+        
+        docker build -t $(registryName).azurecr.io/$(imageRepository):$(tag) -f $(dockerfilePath) .
+        docker tag $(registryName).azurecr.io/$(imageRepository):$(tag) $(registryName).azurecr.io/$(imageRepository):latest
+        
+        docker push $(registryName).azurecr.io/$(imageRepository):$(tag)
+        docker push $(registryName).azurecr.io/$(imageRepository):latest
