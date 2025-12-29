@@ -1,10 +1,10 @@
-FROM openjdk:24 as builder
+FROM eclipse-temurin:24-jdk as builder
 LABEL maintainer="Dominik Banach, Thomas Boigner"
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=layertools -jar application.jar extract
 
-FROM openjdk:24
+FROM eclipse-temurin:24-jdk
 LABEL maintainer="Dominik Banach, Thomas Boigner"
 COPY --from=builder dependencies/ ./
 RUN true
