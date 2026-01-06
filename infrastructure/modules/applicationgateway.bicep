@@ -1,4 +1,6 @@
 param location string
+param applicationGatewaySubnetId string
+param tourPlannerClientIpId string
 
 var applicationGatewayName = 'tour-planner-application-gateway'
 
@@ -15,7 +17,7 @@ resource tourPlannerApplicationGateway 'Microsoft.Network/applicationGateways@20
                 name: 'appGatewayIpConfig'
                 properties: {
                     subnet: {
-                        id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'application-gateway-subnet')
+                        id: applicationGatewaySubnetId
                     }
                 }
             }
@@ -26,7 +28,7 @@ resource tourPlannerApplicationGateway 'Microsoft.Network/applicationGateways@20
                 properties: {
                     privateIPAllocationMethod: 'Dynamic'
                     publicIPAddress: {
-                        id: resourceId('Microsoft.Network/publicIPAddresses', 'tour-planner-client-ip')
+                        id: tourPlannerClientIpId
                     }
                 }
             }
@@ -45,7 +47,7 @@ resource tourPlannerApplicationGateway 'Microsoft.Network/applicationGateways@20
                 properties: {
                     backendAddresses: [
                         {
-                            ipAddress: '10.0.1.4'
+                            fqdn: 'tour-planner-client.tour-planner.com'
                         }
                     ]
                 }
@@ -97,7 +99,6 @@ resource tourPlannerApplicationGateway 'Microsoft.Network/applicationGateways@20
             }
         ]
         enableHttp2: true
-        enableFIPS: false
         autoscaleConfiguration: {
             minCapacity: 0
             maxCapacity: 10

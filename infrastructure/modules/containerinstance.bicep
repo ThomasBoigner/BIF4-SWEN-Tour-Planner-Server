@@ -1,6 +1,8 @@
 param location string
 param registryName string
 param registryUsername string
+@secure()
+param registryPassword string
 param publicSubnetId string
 param privateSubnetId string
 
@@ -36,6 +38,7 @@ resource tourPlannerClientContainer 'Microsoft.ContainerInstance/containerGroups
             {
                 server: registryName
                 username: registryUsername
+                password: registryPassword
             }
         ]
         restartPolicy: 'OnFailure'
@@ -46,7 +49,6 @@ resource tourPlannerClientContainer 'Microsoft.ContainerInstance/containerGroups
                     port: 80
                 }
             ]
-            ip: '10.0.1.1'
             type: 'Private'
         }
         osType: 'Linux'
@@ -57,8 +59,6 @@ resource tourPlannerClientContainer 'Microsoft.ContainerInstance/containerGroups
         ]
     }
 }
-
-
 
 resource tourPlannerServerContainer 'Microsoft.ContainerInstance/containerGroups@2023-05-01' = {
     name: tourPlannerServerName
@@ -93,6 +93,7 @@ resource tourPlannerServerContainer 'Microsoft.ContainerInstance/containerGroups
             {
                 server: registryName
                 username: registryUsername
+                password: registryPassword
             }
         ]
         restartPolicy: 'OnFailure'
@@ -107,7 +108,6 @@ resource tourPlannerServerContainer 'Microsoft.ContainerInstance/containerGroups
                     port: 8080
                 }
             ]
-            ip: '10.0.2.1'
             type: 'Private'
         }
         osType: 'Linux'
@@ -118,3 +118,6 @@ resource tourPlannerServerContainer 'Microsoft.ContainerInstance/containerGroups
         ]
     }
 }
+
+output tourPlannerClientIp string = tourPlannerClientContainer.properties.ipAddress.ip
+output tourPlannerServerIp string = tourPlannerServerContainer.properties.ipAddress.ip

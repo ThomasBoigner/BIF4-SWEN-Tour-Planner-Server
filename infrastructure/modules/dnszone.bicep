@@ -1,4 +1,5 @@
-param virtualNetwork string
+param tourPlannerClientIp string
+param tourPlannerServerIp string
 
 var privateDnsZonesName  = 'tour-planner.com'
 
@@ -12,9 +13,10 @@ resource tourPlannerClientRecord 'Microsoft.Network/privateDnsZones/A@2024-06-01
     parent: tourPlannerCom
     name: 'tour-planner-client'
     properties: {
+        ttl: 300
         aRecords: [
             {
-                ipv4Address: '10.0.1.1'
+                ipv4Address: tourPlannerClientIp
             }
         ]
     }
@@ -24,9 +26,10 @@ resource tourPlannerServerRecord 'Microsoft.Network/privateDnsZones/A@2024-06-01
     parent: tourPlannerCom
     name: 'tour-planner-server'
     properties: {
+        ttl: 300
         aRecords: [
             {
-                ipv4Address: '10.0.2.1'
+                ipv4Address: tourPlannerServerIp
             }
         ]
     }
@@ -39,7 +42,8 @@ resource tourPlannerVirtualNetwork 'Microsoft.Network/privateDnsZones/virtualNet
     location: 'global'
     properties: {
         virtualNetwork: {
-            id: virtualNetwork
+            id: resourceId('Microsoft.Network/virtualNetworks', 'tour-planner-network')
         }
+        registrationEnabled: false
     }
 }
