@@ -22,7 +22,7 @@ steps:
   # 2. Maven Build
   - script: |
       java -version
-      mvn -B clean package  -f pm.xml
+      mvn -B clean package  -f pom.xml
     displayName: 'Maven Build'
 
   # 3. Docker Build & Push
