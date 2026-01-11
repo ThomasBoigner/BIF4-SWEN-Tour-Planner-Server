@@ -5,6 +5,10 @@ param registryUsername string
 param registryPassword string
 param publicSubnetId string
 param privateSubnetId string
+param databaseFqdn string
+param databaseAdminUsername string
+@secure()
+param databaseAdminPassword string
 
 var tourPlannerClientName = 'tour-planner-client'
 var tourPlannerServerName = 'tour-planner-server'
@@ -79,7 +83,24 @@ resource tourPlannerServerContainer 'Microsoft.ContainerInstance/containerGroups
                             port: 8080
                         }
                     ]
-                    environmentVariables: []
+                    environmentVariables: [
+                        {
+                            name: 'SPRING_DATASOURCE_URL'
+                            value: 'jdbc:postgresql://${databaseFqdn}:5432/tour-planner-database'
+                        }
+                        {
+                            name: 'SPRING_DATASOURCE_USERNAME'
+                            value: databaseAdminUsername
+                        }
+                        {
+                            name: 'SPRING_JPA_HIBERNATE_DDL_AUTO'
+                            value: 'update'
+                        }
+                        {
+                            name: 'SPRING_DATASOURCE_PASSWORD'
+                            secureValue: databaseAdminPassword
+                        }
+                    ]
                     resources: {
                         requests: {
                             memoryInGB: 2

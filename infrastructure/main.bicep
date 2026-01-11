@@ -1,4 +1,7 @@
 param location string
+param databaseAdminUsername string
+@secure()
+param databaseAdminPassword string
 param registryName string
 param registryUsername string
 @secure()
@@ -11,11 +14,18 @@ module networkModule 'modules/networking.bicep' = {
     }
 }
 
+module databaseModule 'modules/database.bicep' = {
+    name: 'databaseDeploy'
+    params: {
+        vnetId: networkModule.outputs.vnetId
+        dataBaseSubnetId: networkModule.outputs.databaseSubnetId
+        databaseAdminUsername: databaseAdminUsername
+        databaseAdminPassword: databaseAdminPassword
+    }
+}
+
 module containerInstanceModule 'modules/containerinstance.bicep' = {
     name: 'containerInstanceDeploy'
-    dependsOn: [
-    	networkModule
-    ]
     params: {
         location: location
         registryName: registryName
@@ -23,15 +33,16 @@ module containerInstanceModule 'modules/containerinstance.bicep' = {
         registryPassword: registryPassword
         privateSubnetId: networkModule.outputs.privateSubnetId
         publicSubnetId: networkModule.outputs.publicSubnetId
+        databaseFqdn: databaseModule.outputs.databaseFqdn
+        databaseAdminUsername: databaseAdminUsername
+        databaseAdminPassword: databaseAdminPassword
     }
 }
 
 module dnsZoneModule 'modules/dnszone.bicep' = {
     name: 'dnsZoneDeploy'
-    dependsOn: [
-    	containerInstanceModule
-    ]
     params: {
+        vnetId: networkModule.outputs.vnetId
         tourPlannerClientIp: containerInstanceModule.outputs.tourPlannerClientIp
         tourPlannerServerIp: containerInstanceModule.outputs.tourPlannerServerIp
     }
@@ -40,7 +51,7 @@ module dnsZoneModule 'modules/dnszone.bicep' = {
 module Identifier 'modules/applicationgateway.bicep' = {
     name: 'applicationGatewayDeploy'
     dependsOn: [
-    	networkModule, dnsZoneModule
+        dnsZoneModule
     ]
     params: {
         location: location

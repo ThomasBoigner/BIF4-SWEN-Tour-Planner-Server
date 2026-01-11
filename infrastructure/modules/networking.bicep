@@ -25,6 +25,9 @@ resource applicationGatewaySubnet 'Microsoft.Network/virtualNetworks/subnets@202
 resource publicSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-07-01' = {
     parent: privateVirtualNetwork
     name: 'public-subnet'
+    dependsOn: [
+        applicationGatewaySubnet
+    ]
     properties: {
         addressPrefix: '10.0.1.0/24'
         delegations: [
@@ -41,6 +44,9 @@ resource publicSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-07-01' = {
 resource privateSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-07-01' = {
     parent: privateVirtualNetwork
     name: 'private-subnet'
+    dependsOn: [
+        publicSubnet
+    ]
     properties: {
         addressPrefix: '10.0.2.0/24'
         delegations: [
@@ -48,6 +54,25 @@ resource privateSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-07-01' = 
                 name: 'aci-delegation'
                 properties: {
                     serviceName: 'Microsoft.ContainerInstance/containerGroups'
+                }
+            }
+        ]
+    }
+}
+
+resource databaseSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-07-01' = {
+    parent: privateVirtualNetwork
+    name: 'database-subnet'
+    dependsOn: [
+        privateSubnet
+    ]
+    properties: {
+        addressPrefix: '10.0.3.0/24'
+        delegations: [
+            {
+                name: 'postgres-delegation'
+                properties: {
+                    serviceName: 'Microsoft.DBforPostgreSQL/flexibleServers'
                 }
             }
         ]
@@ -70,7 +95,9 @@ resource tourPlannerClientIp 'Microsoft.Network/publicIPAddresses@2024-07-01' = 
     }
 }
 
+output vnetId string = privateVirtualNetwork.id
 output applicationGatewaySubnetId string = applicationGatewaySubnet.id
 output publicSubnetId string = publicSubnet.id
 output privateSubnetId string = privateSubnet.id
+output databaseSubnetId string = databaseSubnet.id
 output tourPlannerClientIpId string = tourPlannerClientIp.id

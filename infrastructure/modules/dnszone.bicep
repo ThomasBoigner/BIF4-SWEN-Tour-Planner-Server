@@ -1,5 +1,6 @@
 param tourPlannerClientIp string
 param tourPlannerServerIp string
+param vnetId string
 
 var privateDnsZonesName  = 'tour-planner.com'
 
@@ -42,7 +43,7 @@ resource tourPlannerVirtualNetwork 'Microsoft.Network/privateDnsZones/virtualNet
     location: 'global'
     properties: {
         virtualNetwork: {
-            id: resourceId('Microsoft.Network/virtualNetworks', 'tour-planner-network')
+            id: vnetId
         }
         registrationEnabled: false
     }
