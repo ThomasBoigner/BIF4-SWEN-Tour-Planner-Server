@@ -70,3 +70,22 @@ stages:
                 
                 docker push $(registryName).azurecr.io/$(imageRepository):$(tag)
                 docker push $(registryName).azurecr.io/$(imageRepository):latest
+
+ # Stage 3: Nur Main - Container neu starten
+  - stage: Deploy
+    displayName: 'Deploy'
+    dependsOn: Push
+    condition: and(succeeded(), eq(variables.isMain, true))
+    jobs:
+      - job: RestartContainer
+        steps:
+          - task: AzureCLI@2
+            displayName: 'Restart Container to pull new image'
+            inputs:
+              azureSubscription: 'acr-tourplanner1'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                az container restart \
+                  --resource-group tourplanner-rg \
+                  --name tour-planner-server
