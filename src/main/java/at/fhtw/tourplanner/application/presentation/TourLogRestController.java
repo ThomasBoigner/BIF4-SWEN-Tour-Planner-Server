@@ -21,7 +21,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 
 @Slf4j
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = {
+    "http://localhost:4200",
+    "http://tour-planner.italynorth.cloudapp.azure.com"
+})
 @RestController
 @RequestMapping(value = TourLogRestController.BASE_URL)
 public class TourLogRestController {

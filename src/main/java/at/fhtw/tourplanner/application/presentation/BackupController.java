@@ -21,7 +21,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 
 @Slf4j
-@CrossOrigin(origins = "http://localhost:4200", exposedHeaders = HttpHeaders.CONTENT_DISPOSITION)
+@CrossOrigin(
+        origins = {"http://localhost:4200", "http://tour-planner.italynorth.cloudapp.azure.com"},
+        exposedHeaders = HttpHeaders.CONTENT_DISPOSITION
+)
 @RestController
 @RequestMapping(value = BackupController.BASE_URL)
 public class BackupController {
