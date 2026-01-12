@@ -77,25 +77,46 @@ stages:
     dependsOn: Push
     condition: and(succeeded(), eq(variables.isMain, true))
     jobs:
-      - job: RestartContainer
+      - job: DeployJob
+        displayName: 'Deploy Infrastructure and Restart Container'
         steps:
+
+          # Step 1: Fetch Key Vault secrets
           - task: AzureCLI@2
-            displayName: 'Restart Container to pull new image'
+            displayName: 'Fetch Key Vault Secrets'
             inputs:
-              azureSubscription: 'acr-tourplanner1'
+              azureSubscription: 'tourplanner-kv-connection'   # Key Vault Service Connection
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                # Variables
+                KEYVAULT_NAME="tourplanner-kv"
+                
+                # Fetch ACR password from Key Vault
+                REGISTRY_PASSWORD=$(az keyvault secret show \
+                    --vault-name $KEYVAULT_NAME \
+                    --name acr-password \
+                    --query value -o tsv)
+                
+                # Store it as a pipeline secret variable
+                echo "##vso[task.setvariable variable=registryPassword;issecret=true]$REGISTRY_PASSWORD"
+
+          # Step 2: Deploy Bicep with Key Vault secrets
+          - task: AzureCLI@2
+            displayName: 'Deploy Infrastructure with Bicep'
+            inputs:
+              azureSubscription: 'tourplanner-kv-connection'   # Same SP can deploy if it has access
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
                 RESOURCE_GROUP="tourplanner-rg"
                 LOCATION="northeurope"
                 BICEP_FILE="infra/main.bicep"
                 REGISTRY_NAME="$(registryName)"
                 REGISTRY_USERNAME="tourplanner"
-                REGISTRY_PASSWORD="$(registryPassword)" 
-                KEYVAULT_NAME="TourPlannerVault"
-
-                # Deploy Bicep and pass Key Vault secret
+                REGISTRY_PASSWORD="$(registryPassword)"
+                KEYVAULT_NAME="tourplanner-kv"
+                
+                echo "Deploying infrastructure..."
                 az deployment group create \
                   --resource-group $RESOURCE_GROUP \
                   --template-file $BICEP_FILE \
@@ -104,3 +125,17 @@ stages:
                                registryUsername=$REGISTRY_USERNAME \
                                registryPassword=$REGISTRY_PASSWORD \
                                keyVaultName=$KEYVAULT_NAME
+
+          # Step 3: Restart container to pull new image
+          - task: AzureCLI@2
+            displayName: 'Restart Container'
+            inputs:
+              azureSubscription: 'acr-tourplanner1'   # Docker/ACR service connection
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                RESOURCE_GROUP="tourplanner-rg"
+                CONTAINER_GROUP="tourplanner-container"
+                
+                echo "Restarting container to pull latest image..."
+                az container restart --name $CONTAINER_GROUP --resource-group $RESOURCE_GROUP

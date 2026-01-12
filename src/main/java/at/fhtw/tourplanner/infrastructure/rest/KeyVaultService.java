@@ -1,6 +1,6 @@
 package at.fhtw.tourplanner.infrastructure.rest;
 
-import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.azure.identity.AzureCliCredentialBuilder;
 import com.azure.security.keyvault.secrets.SecretClient;
 import com.azure.security.keyvault.secrets.SecretClientBuilder;
 import com.azure.security.keyvault.secrets.models.KeyVaultSecret;
@@ -16,7 +16,7 @@ public class KeyVaultService {
     public KeyVaultService() {
         this.secretClient = new SecretClientBuilder()
                 .vaultUrl("https://tourplanner-kv.vault.azure.net/")
-                .credential(new DefaultAzureCredentialBuilder().build())
+                .credential(new AzureCliCredentialBuilder().build())
                 .buildClient();
     }
 
