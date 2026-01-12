@@ -13,34 +13,6 @@ param databaseAdminPassword string
 var tourPlannerClientName = 'tour-planner-client'
 var tourPlannerServerName = 'tour-planner-server'
 
-param keyVaultName string
-param openRouteApiKeyName string = 'openroute-api-key'
-
-@secure()
-param openRouteApiKey string
-
-resource container 'Microsoft.ContainerInstance/containerGroups@2021-10-01' = {
-  name: 'tourPlannerContainer'
-  location: location
-  properties: {
-    containers: [
-      {
-        name: 'tourplanner-server'
-        properties: {
-          image: '${registryName}.azurecr.io/${registryUsername}:latest'
-          environmentVariables: [
-            {
-              name: 'openroute-api-key'
-              value: openRouteApiKey
-            }
-          ]
-        }
-      }
-    ]
-    osType: 'Linux'
-  }
-}
-
 resource tourPlannerClientContainer 'Microsoft.ContainerInstance/containerGroups@2023-05-01' = {
     name: tourPlannerClientName
     location: location
