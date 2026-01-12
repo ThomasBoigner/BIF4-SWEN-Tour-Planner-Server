@@ -9,6 +9,8 @@ param databaseFqdn string
 param databaseAdminUsername string
 @secure()
 param databaseAdminPassword string
+@secure()
+param openRouteApiKey string
 
 var tourPlannerClientName = 'tour-planner-client'
 var tourPlannerServerName = 'tour-planner-server'
@@ -99,6 +101,10 @@ resource tourPlannerServerContainer 'Microsoft.ContainerInstance/containerGroups
                         {
                             name: 'SPRING_DATASOURCE_PASSWORD'
                             secureValue: databaseAdminPassword
+                        }
+                        {
+                            name: 'OPEN_ROUTE_API_KEY'
+                            secureValue: openRouteApiKey
                         }
                     ]
                     resources: {

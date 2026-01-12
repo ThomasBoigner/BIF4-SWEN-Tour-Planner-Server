@@ -6,7 +6,8 @@ param registryName string
 param registryUsername string
 @secure()
 param registryPassword string
-param keyVaultName string
+@secure()
+param openRouteApiKey string
 
 module networkModule 'modules/networking.bicep' = {
     name: 'networkDeploy'
@@ -37,6 +38,7 @@ module containerInstanceModule 'modules/containerinstance.bicep' = {
         databaseFqdn: databaseModule.outputs.databaseFqdn
         databaseAdminUsername: databaseAdminUsername
         databaseAdminPassword: databaseAdminPassword
+        openRouteApiKey: openRouteApiKey
     }
 }
 

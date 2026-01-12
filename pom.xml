@@ -41,20 +41,6 @@
 	</properties>
 
 	<dependencies>
-
-		<!-- azure dependencies -->
-		<dependency>
-			<groupId>com.azure</groupId>
-			<artifactId>azure-identity</artifactId>
-			<version>1.12.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.azure</groupId>
-			<artifactId>azure-security-keyvault-secrets</artifactId>
-			<version>4.10.4</version>
-		</dependency>
-
 		<!-- spring boot starter -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

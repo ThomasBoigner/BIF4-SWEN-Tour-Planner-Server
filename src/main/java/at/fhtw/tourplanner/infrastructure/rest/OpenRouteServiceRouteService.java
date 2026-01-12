@@ -5,6 +5,7 @@ import at.fhtw.tourplanner.application.service.dto.RouteInformationDto;
 import at.fhtw.tourplanner.domain.model.TransportType;
 import at.fhtw.tourplanner.infrastructure.rest.response.RouteInformationResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -12,14 +13,14 @@ import org.springframework.web.client.RestClient;
 @Service
 public class OpenRouteServiceRouteService implements RouteService {
     private final RestClient restClient;
-    private final KeyVaultService keyVaultService;
 
-    public OpenRouteServiceRouteService(RestClient.Builder builder,
-                                        KeyVaultService keyVaultService) {
+    @Value("${open.route.api.key}")
+    private String openRouteApiKey;
+
+    public OpenRouteServiceRouteService(RestClient.Builder builder) {
         this.restClient = builder
                 .baseUrl("https://api.openrouteservice.org/")
                 .build();
-        this.keyVaultService = keyVaultService;
     }
 
     @Override
@@ -47,12 +48,10 @@ public class OpenRouteServiceRouteService implements RouteService {
             case TransportType.VACATION -> "driving-car";
         };
 
-        String apiKey = keyVaultService.getSecret("openroute-api-key");
-
         RouteInformationResponse response = this.restClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(String.format("v2/directions/%s", profile))
-                        .queryParam("api_key", apiKey)
+                        .queryParam("api_key", openRouteApiKey)
                         .queryParam("start", String.format("%s, %s", formLongitude, fromLatitude))
                         .queryParam("end", String.format("%s, %s", toLongitude, toLatitude))
                         .build())

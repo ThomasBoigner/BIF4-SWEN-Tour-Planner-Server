@@ -10,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 
@@ -96,19 +94,5 @@ class OpenRouteServiceRouteServiceTest {
                         10, 20, 30, 40, TransportType.VACATION
                 )
         );
-    }
-
-    @TestConfiguration
-    static class TestConfig {
-
-        @Bean
-        KeyVaultService keyVaultService() {
-            return new KeyVaultService() {
-                @Override
-                public String getSecret(String secretName) {
-                    return "test-api-key";
-                }
-            };
-        }
     }
 }

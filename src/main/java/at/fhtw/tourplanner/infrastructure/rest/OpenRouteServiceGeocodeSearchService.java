@@ -4,6 +4,7 @@ import at.fhtw.tourplanner.application.service.GeocodeSearchService;
 import at.fhtw.tourplanner.application.service.dto.CoordinateDto;
 import at.fhtw.tourplanner.infrastructure.rest.response.GeocodeSearchResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -11,25 +12,23 @@ import org.springframework.web.client.RestClient;
 @Service
 public class OpenRouteServiceGeocodeSearchService implements GeocodeSearchService {
     private final RestClient restClient;
-    private final KeyVaultService keyVaultService;
 
-    public OpenRouteServiceGeocodeSearchService(RestClient.Builder builder,
-                                                KeyVaultService keyVaultService) {
+    @Value("${open.route.api.key}")
+    private String openRouteApiKey;
+
+    public OpenRouteServiceGeocodeSearchService(RestClient.Builder builder) {
         this.restClient = builder
                 .baseUrl("https://api.openrouteservice.org/")
                 .build();
-        this.keyVaultService = keyVaultService;
     }
 
     @Override
     public CoordinateDto getCoordinates(String address) {
         log.debug("Trying to get the coordinate of address {}", address);
 
-        String apiKey = keyVaultService.getSecret("openroute-api-key");
-
         GeocodeSearchResponse response = this.restClient.get().uri(uriBuilder -> uriBuilder
                         .path("geocode/search")
-                        .queryParam("api_key", apiKey)
+                        .queryParam("api_key", openRouteApiKey)
                         .queryParam("text", address)
                         .queryParam("size", 1)
                         .build())
