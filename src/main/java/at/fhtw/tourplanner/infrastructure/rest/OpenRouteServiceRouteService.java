@@ -12,11 +12,14 @@ import org.springframework.web.client.RestClient;
 @Service
 public class OpenRouteServiceRouteService implements RouteService {
     private final RestClient restClient;
+    private final KeyVaultService keyVaultService;
 
-    public OpenRouteServiceRouteService(RestClient.Builder builder) {
+    public OpenRouteServiceRouteService(RestClient.Builder builder,
+                                        KeyVaultService keyVaultService) {
         this.restClient = builder
                 .baseUrl("https://api.openrouteservice.org/")
                 .build();
+        this.keyVaultService = keyVaultService;
     }
 
     @Override
@@ -44,11 +47,12 @@ public class OpenRouteServiceRouteService implements RouteService {
             case TransportType.VACATION -> "driving-car";
         };
 
+        String apiKey = keyVaultService.getSecret("openroute-api-key");
+
         RouteInformationResponse response = this.restClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(String.format("v2/directions/%s", profile))
-                        .queryParam("api_key",
-                                "5b3ce3597851110001cf624889f50efba32047fbae372fe1bdf0f950")
+                        .queryParam("api_key", apiKey)
                         .queryParam("start", String.format("%s, %s", formLongitude, fromLatitude))
                         .queryParam("end", String.format("%s, %s", toLongitude, toLatitude))
                         .build())

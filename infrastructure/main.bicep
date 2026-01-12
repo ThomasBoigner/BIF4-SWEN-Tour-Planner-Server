@@ -6,6 +6,7 @@ param registryName string
 param registryUsername string
 @secure()
 param registryPassword string
+param keyVaultName string
 
 module networkModule 'modules/networking.bicep' = {
     name: 'networkDeploy'
@@ -24,6 +25,17 @@ module databaseModule 'modules/database.bicep' = {
     }
 }
 
+module keyModule 'modules/keyVaultModule.bicep'= {
+  name: 'keyModuleDeploy'
+  params: {
+    keyVaultName: keyVaultName
+  }
+}
+
+resource kv 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: keyVaultName
+}
+
 module containerInstanceModule 'modules/containerinstance.bicep' = {
     name: 'containerInstanceDeploy'
     params: {
@@ -36,6 +48,8 @@ module containerInstanceModule 'modules/containerinstance.bicep' = {
         databaseFqdn: databaseModule.outputs.databaseFqdn
         databaseAdminUsername: databaseAdminUsername
         databaseAdminPassword: databaseAdminPassword
+        keyVaultName: keyVaultName
+        openRouteApiKey: kv.getSecret('openroute-api-key')
     }
 }
 

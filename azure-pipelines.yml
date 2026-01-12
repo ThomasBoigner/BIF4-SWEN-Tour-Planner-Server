@@ -86,6 +86,21 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                az container restart \
-                  --resource-group tourplanner-rg \
-                  --name tour-planner-server
+                # Variables
+                RESOURCE_GROUP="tourplanner-rg"
+                LOCATION="northeurope"
+                BICEP_FILE="infra/main.bicep"
+                REGISTRY_NAME="$(registryName)"
+                REGISTRY_USERNAME="tourplanner"
+                REGISTRY_PASSWORD="$(registryPassword)" 
+                KEYVAULT_NAME="TourPlannerVault"
+
+                # Deploy Bicep and pass Key Vault secret
+                az deployment group create \
+                  --resource-group $RESOURCE_GROUP \
+                  --template-file $BICEP_FILE \
+                  --parameters location=$LOCATION \
+                               registryName=$REGISTRY_NAME \
+                               registryUsername=$REGISTRY_USERNAME \
+                               registryPassword=$REGISTRY_PASSWORD \
+                               keyVaultName=$KEYVAULT_NAME
