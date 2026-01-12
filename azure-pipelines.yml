@@ -87,5 +87,5 @@ stages:
               scriptLocation: 'inlineScript'
               inlineScript: |
                 az container restart \
-                  --resource-group tourplanner-rg \
+                  --resource-group tour-planner \
                   --name tour-planner-server

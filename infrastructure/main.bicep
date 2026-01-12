@@ -6,6 +6,7 @@ param registryName string
 param registryUsername string
 @secure()
 param registryPassword string
+param keyVaultName string
 
 module networkModule 'modules/networking.bicep' = {
     name: 'networkDeploy'

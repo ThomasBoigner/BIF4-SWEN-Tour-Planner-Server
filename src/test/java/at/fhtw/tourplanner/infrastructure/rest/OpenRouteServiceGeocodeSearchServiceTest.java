@@ -11,6 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
 
@@ -22,11 +25,15 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RestClientTest(OpenRouteServiceGeocodeSearchService.class)
-public class OpenRouteServiceGeocodeSearchServiceTest {
+@Import(OpenRouteServiceGeocodeSearchServiceTest.TestConfig.class)
+class OpenRouteServiceGeocodeSearchServiceTest {
+
     @Autowired
     private OpenRouteServiceGeocodeSearchService openRouteServiceGeocodeSearchService;
+
     @Autowired
     private MockRestServiceServer server;
+
     private ObjectMapper objectMapper;
 
     @BeforeEach
@@ -38,24 +45,32 @@ public class OpenRouteServiceGeocodeSearchServiceTest {
     void ensureGetCoordinatesWorksProperly() throws JsonProcessingException {
         // Given
         String address = "Address";
+
         GeocodeSearchResponse geocodeResponse = GeocodeSearchResponse.builder()
-                .features(List.of(GeocodeFeatureResponse.builder()
+                .features(List.of(
+                        GeocodeFeatureResponse.builder()
                                 .geometry(GeometryResponse.builder()
                                         .coordinates(List.of(20d, 10d))
                                         .build())
-                        .build()))
+                                .build()
+                ))
                 .build();
 
-
         this.server.expect(
-                requestTo("https://api.openrouteservice.org/geocode/search?api_key=" +
-                        "5b3ce3597851110001cf624889f50efba32047fbae372fe1bdf0f950&text=Address" +
-                        "&size=1"))
-                .andRespond(withSuccess(objectMapper.writeValueAsString(geocodeResponse),
-                        MediaType.APPLICATION_JSON));
+                        requestTo(
+                                "https://api.openrouteservice.org/geocode/search" +
+                                        "?api_key=test-api-key" +
+                                        "&text=Address" +
+                                        "&size=1"
+                        ))
+                .andRespond(withSuccess(
+                        objectMapper.writeValueAsString(geocodeResponse),
+                        MediaType.APPLICATION_JSON
+                ));
 
         // When
-        CoordinateDto result = openRouteServiceGeocodeSearchService.getCoordinates(address);
+        CoordinateDto result =
+                openRouteServiceGeocodeSearchService.getCoordinates(address);
 
         // Then
         assertThat(result.latitude()).isEqualTo(10d);
@@ -68,13 +83,32 @@ public class OpenRouteServiceGeocodeSearchServiceTest {
         String address = "Address";
 
         this.server.expect(
-                        requestTo("https://api.openrouteservice.org/geocode/search?api_key=" +
-                                "5b3ce3597851110001cf624889f50efba32047fbae372fe1bdf0f950" +
-                                "&text=Address&size=1"))
+                        requestTo(
+                                "https://api.openrouteservice.org/geocode/search" +
+                                        "?api_key=test-api-key" +
+                                        "&text=Address" +
+                                        "&size=1"
+                        ))
                 .andRespond(withSuccess("", MediaType.APPLICATION_JSON));
 
-        // When
+        // Then
         assertThrows(IllegalArgumentException.class, () ->
-                openRouteServiceGeocodeSearchService.getCoordinates(address));
+                openRouteServiceGeocodeSearchService.getCoordinates(address)
+        );
+    }
+
+    @TestConfiguration
+    static class TestConfig {
+
+        @Bean
+        KeyVaultService keyVaultService() {
+            return new KeyVaultService() {
+                @Override
+                public String getSecret(String secretName) {
+                    return "test-api-key";
+                }
+            };
+        }
     }
 }
+

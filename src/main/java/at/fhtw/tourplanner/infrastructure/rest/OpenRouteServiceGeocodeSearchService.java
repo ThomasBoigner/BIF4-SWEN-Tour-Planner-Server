@@ -11,21 +11,25 @@ import org.springframework.web.client.RestClient;
 @Service
 public class OpenRouteServiceGeocodeSearchService implements GeocodeSearchService {
     private final RestClient restClient;
+    private final KeyVaultService keyVaultService;
 
-    public OpenRouteServiceGeocodeSearchService(RestClient.Builder builder) {
+    public OpenRouteServiceGeocodeSearchService(RestClient.Builder builder,
+                                                KeyVaultService keyVaultService) {
         this.restClient = builder
                 .baseUrl("https://api.openrouteservice.org/")
                 .build();
+        this.keyVaultService = keyVaultService;
     }
 
     @Override
     public CoordinateDto getCoordinates(String address) {
         log.debug("Trying to get the coordinate of address {}", address);
 
+        String apiKey = keyVaultService.getSecret("openroute-api-key");
+
         GeocodeSearchResponse response = this.restClient.get().uri(uriBuilder -> uriBuilder
                         .path("geocode/search")
-                        .queryParam("api_key",
-                                "5b3ce3597851110001cf624889f50efba32047fbae372fe1bdf0f950")
+                        .queryParam("api_key", apiKey)
                         .queryParam("text", address)
                         .queryParam("size", 1)
                         .build())
