@@ -54,7 +54,7 @@ stages:
           - task: AzureCLI@2
             displayName: 'Docker Build and Push'
             inputs:
-              azureSubscription: 'acr-tourplanner1'
+              azureSubscription: 'tour-planner-registry'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
@@ -78,7 +78,7 @@ stages:
           - task: AzureCLI@2
             displayName: 'Restart Container'
             inputs:
-              azureSubscription: 'acr-tourplanner1'
+              azureSubscription: 'tour-planner-main'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
