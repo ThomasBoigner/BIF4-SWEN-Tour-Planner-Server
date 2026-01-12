@@ -8,6 +8,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  dockerfilePath: 'src/main/docker/Dockerfile'
 
 stages:
   # Stage 1: Build & Test
@@ -57,15 +58,15 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                az acr login --name $(registryName)
+                az acr login --name $(containerRegistry)
                 
                 docker build \
-                  -t $(registryName).azurecr.io/$(imageRepository):$(tag) \
-                  -t $(registryName).azurecr.io/$(imageRepository):latest \
+                  -t $(containerRegistry).azurecr.io/$(imageRepository):$(tag) \
+                  -t $(containerRegistry).azurecr.io/$(imageRepository):latest \
                   -f $(dockerfilePath) .
                 
-                docker push $(registryName).azurecr.io/$(imageRepository):$(tag)
-                docker push $(registryName).azurecr.io/$(imageRepository):latest
+                docker push $(containerRegistry).azurecr.io/$(imageRepository):$(tag)
+                docker push $(containerRegistry).azurecr.io/$(imageRepository):latest
 
   # Stage 3: Deploy (nur Main)
   - stage: Deploy
@@ -83,11 +84,5 @@ stages:
               inlineScript: |
                 echo "Restarting container to pull latest image..."
                 az container restart \
-                  --name $(containerName) \
-                  --resource-group $(resourceGroup)
-                
-                echo "Waiting for container to be ready..."
-                az container show \
-                  --name $(containerName) \
-                  --resource-group $(resourceGroup) \
-                  --query instanceView.state
+                  --resource-group $(resource-group) \
+                  --name $(resource-name) \
